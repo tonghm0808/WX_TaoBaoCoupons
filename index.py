@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-from bottle import Bottle
+from bottle import Bottle, request, route, run, debug, get, post
 import pymongo
 import hashlib
 import xml.etree.ElementTree as ET
