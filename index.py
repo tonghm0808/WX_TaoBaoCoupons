@@ -42,10 +42,11 @@ def search_db(temp=None):
 
     con = pymongo.MongoClient('mongo.duapp.com', 8908)
     db = con[db_name]
-    if db.authenticate(api_key, secret_key) is True:
-        return db['coupons'].find({"title": {"$regex": temp}})
-    else:
-        return False
+    db.authenticate(api_key, secret_key)
+    result = {}
+    for x in db['coupons'].find({"title": {"$regex": temp}}):
+        result.append(x)
+    return result
 
 
 @app.post("/")
@@ -59,12 +60,12 @@ def response_msg():
     <Content><![CDATA[%s]]></Content>
     </xml>"""
     get_info = search_db(msg['Content'])
-    if get_info is not None:
-        echostr = textTpl % (msg['FromUserName'],
-                             msg['ToUserName'], str(int(time.time())), msg['MsgType'], '有结果')
-    else:
+    if get_info is None:
         echostr = textTpl % (msg['FromUserName'],
                              msg['ToUserName'], str(int(time.time())), msg['MsgType'], '没有结果')
+    else:
+        echostr = textTpl % (msg['FromUserName'],
+                             msg['ToUserName'], str(int(time.time())), msg['MsgType'], str(get_info[0]))
     return echostr
 
 
