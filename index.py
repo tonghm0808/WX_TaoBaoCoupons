@@ -5,10 +5,11 @@ import time
 import pymongo
 
 db_name = 'dwADfZdbrNknnSLAmPxt'
-con = pymongo.MongoClient('mongo.duapp.com', 8908)
-db = con['db_name']
 api_key = '48085b6296ac48acb99e6ff71e863630'
 secret_key = 'dbd3fcb2c6034b4986364603334d6ffe'
+
+con = pymongo.MongoClient('mongo.duapp.com', 8908)
+db = con['db_name']
 db.authenticate(api_key, secret_key)
 coupons = db['coupons']
 
@@ -47,7 +48,6 @@ def test_mongo():
     while(1):
         res = get_goods(url, page_num)
         if res is None:
-            con.close()
             break
         else:
             page_num = page_num + 1
