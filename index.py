@@ -60,12 +60,12 @@ def response_msg():
     <Content><![CDATA[%s]]></Content>
     </xml>"""
     get_info = search_db(msg['Content'])
-    if get_info:
-        echostr = textTpl % (msg['FromUserName'],
-                             msg['ToUserName'], str(int(time.time())), msg['MsgType'], '没有结果')
-    else:
+    if len(get_info):
         echostr = textTpl % (msg['FromUserName'],
                              msg['ToUserName'], str(int(time.time())), msg['MsgType'], get_info[0])
+    else:
+        echostr = textTpl % (msg['FromUserName'],
+                             msg['ToUserName'], str(int(time.time())), msg['MsgType'], '没有结果')
     return echostr
 
 
