@@ -1,5 +1,6 @@
 #-*- coding:utf-8 -*-
 import pymongo
+from bae.core.wsgi import WSGIApplication
 from bottle import *
 import hashlib
 import xml.etree.ElementTree as ET
@@ -10,7 +11,10 @@ db_name = 'dwADfZdbrNknnSLAmPxt'
 collection_name = 'coupons'
 api_key = '48085b6296ac48acb99e6ff71e863630'
 secret_key = 'dbd3fcb2c6034b4986364603334d6ffe'
-
+con = pymongo.MongoClient('mongo.duapp.com', 8908)
+db = con['db_name']
+db.authenticate(api_key, secret_key)
+db[collection_name].insert({"id": 10, 'value': "test test"})
 app = Bottle()
 
 
@@ -42,13 +46,8 @@ def parse_msg():
 
 @app.post("/")
 def response_msg():
-    con = pymongo.MongoClient('mongo.duapp.com', 8908)
-    db = con['db_name']
-    db.authenticate(api_key, secret_key)
     msg = parse_msg()
     # result = coupons.find({"title": {"$regex": "%s" % msg['Content']}})
-    db[collection_name].insert({"id": 10, 'value': "test test"})
-    con.close()
     echostr = """<xml>
     <ToUserName><![CDATA[%s]]></ToUserName>
     <FromUserName><![CDATA[%s]]></FromUserName>
@@ -64,5 +63,4 @@ if __name__ == '__main__':
     run(app, host='127.0.0.1', port=8080, reloader=True)
 
 else:
-    from bae.core.wsgi import WSGIApplication
     application = WSGIApplication(app)
