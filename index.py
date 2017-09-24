@@ -43,7 +43,7 @@ def search_db(temp=None):
     con = pymongo.MongoClient('mongo.duapp.com', 8908)
     db = con[db_name]
     db.authenticate(api_key, secret_key)
-    result = {}
+    result = []
     for x in db['coupons'].find({"title": {"$regex": temp}}):
         result.append(x)
     return result
