@@ -14,7 +14,7 @@ secret_key = 'dbd3fcb2c6034b4986364603334d6ffe'
 con = pymongo.MongoClient('mongo.duapp.com', 8908)
 db = con['db_name']
 db.authenticate(api_key, secret_key)
-db[collection_name].insert({"id": 10, 'value': "test test"})
+# db[collection_name].insert({"id": 10, 'value': "test test"})
 app = Bottle()
 
 
