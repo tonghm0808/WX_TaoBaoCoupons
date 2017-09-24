@@ -1,5 +1,5 @@
 #-*- coding:utf-8 -*-
-import bottle
+from bottle import *
 import hashlib
 import xml.etree.ElementTree as ET
 import time
@@ -54,13 +54,13 @@ def response_msg():
     <CreateTime>%s</CreateTime>
     <MsgType><![CDATA[%s]]></MsgType>
     <Content><![CDATA[%s]]></Content>
-    </xml>""" % (msg['FromUserName'], msg['ToUserName'], time.time(), "text", '没有结果')
+    </xml>""" % (msg['FromUserName'], msg['ToUserName'], time.time(), 'text', msg['Content'])
     return echostr
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     debug(True)
-    run(host='127.0.0.1', port=8080, reloader=True)
+    run(app, host='127.0.0.1', port=8080, reloader=True)
 
 else:
     from bae.core.wsgi import WSGIApplication
