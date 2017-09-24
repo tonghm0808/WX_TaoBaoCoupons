@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import sys
+sys.path.append('/home/bae/app/deps')
 from bs4 import BeautifulSoup
 import requests
 import time

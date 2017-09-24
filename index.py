@@ -8,11 +8,6 @@ db_name = 'dwADfZdbrNknnSLAmPxt'
 api_key = '48085b6296ac48acb99e6ff71e863630'
 secret_key = 'dbd3fcb2c6034b4986364603334d6ffe'
 
-con = pymongo.MongoClient('mongo.duapp.com', 8908)
-db = con['db_name']
-db.authenticate(api_key, secret_key)
-coupons = db['coupons']
-
 header = {
     'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
 }
@@ -20,6 +15,11 @@ url = 'https://m.lapin365.com/index/GetHomeListAjax'
 
 
 def get_goods(url, page=1, data=None):
+    con = pymongo.MongoClient('mongo.duapp.com', 8908)
+    db = con['db_name']
+    db.authenticate(api_key, secret_key)
+    coupons = db['coupons']
+
     payload = {'limit': 10, 'pageIndex': page, 'clienttype': 0}
     wb_data = requests.post(url, data=payload, headers=header)
     soup = BeautifulSoup(wb_data.text, 'lxml')
@@ -43,23 +43,12 @@ def get_goods(url, page=1, data=None):
     return data
 
 
-def test_mongo():
-    page_num = 1
-    while(1):
-        res = get_goods(url, page_num)
-        if res is None:
-            break
-        else:
-            page_num = page_num + 1
-        time.sleep(1)
-
-
 def app(environ, start_response):
     status = '200 OK'
     headers = [('Content-type', 'text/html')]
     start_response(status, headers)
     try:
-        return test_mongo()
+        return get_goods(url)
     except Exception as e:
         return "exception"
 
