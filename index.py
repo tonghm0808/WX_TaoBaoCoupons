@@ -1,64 +1,78 @@
-# -*- coding: utf-8 -*-
-from bs4 import BeautifulSoup
-import requests
-import time
+# -*- coding:utf-8 -*-
+
+import bottle
 import pymongo
+import hashlib
+import xml.etree.ElementTree as ET
+import time
 
-import logging
-import logging.config
-
-logging.config.fileConfig("logging.conf")
-
-db_name = 'dwADfZdbrNknnSLAmPxt'
-api_key = '48085b6296ac48acb99e6ff71e863630'
-secret_key = 'dbd3fcb2c6034b4986364603334d6ffe'
-
-header = {
-    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
-}
-url = 'https://m.lapin365.com/index/GetHomeListAjax'
+app = Bottle(__name__)
 
 
-def get_goods(url, page=1, data=None):
+@app.get('/')
+def checkSignature():
+    token = "tonghuanmingdeweixin"
+    signature = request.GET.get('signature', None)
+    timestamp = request.GET.get('timestamp', None)
+    nonce = request.GET.get('nonce', None)
+    echostr = request.GET.get('echostr', None)
+    tmpList = [token, timestamp, nonce]
+    tmpList.sort()
+    tmpstr = "%s%s%s" % tuple(tmpList)
+    hashstr = hashlib.sha1(tmpstr).hexdigest()
+    if hashstr == signature:
+        return echostr
+    else:
+        return False
+
+
+def parse_msg():
+    recvmsg = request.body.read()
+    root = ET.fromstring(recvmsg)
+    msg = {}
+    for child in root:
+        msg[child.tag] = child.text
+    return msg
+
+
+def con_db():
+    db_name = 'dwADfZdbrNknnSLAmPxt'
+    api_key = '48085b6296ac48acb99e6ff71e863630'
+    secret_key = 'dbd3fcb2c6034b4986364603334d6ffe'
+
     con = pymongo.MongoClient('mongo.duapp.com', 8908)
     db = con['db_name']
-    db.authenticate(api_key, secret_key)
-    coupons = db['coupons']
-
-    payload = {'limit': 10, 'pageIndex': page, 'clienttype': 0}
-    wb_data = requests.post(url, data=payload, headers=header)
-    soup = BeautifulSoup(wb_data.text, 'lxml')
-    titles = soup.select('li > a.couponlink.pic-wrap')
-    links = soup.select('li > a.couponlink.pic-wrap')
-    imgs = soup.select('li > a.couponlink.pic-wrap > img.lazy')
-    originprices = soup.select('div.salesinfo > del.origin-price')
-    discountprices = soup.select('span.aftercoupon > span')
-
-    if data is None:
-        for title, link, img, originprice, discountprice in zip(titles, links, imgs, originprices, discountprices):
-            data = {
-                'title': title.get('title'),
-                'link': link.get('data-couponbuylink'),
-                'img': img.get('data-original'),
-                'originprice': originprice.get_text()[1:-1],
-                'discountprice': discountprice.get_text(),
-            }
-            coupons.insert_one(data)
-            print data
-    return data
+    if db.authenticate(api_key, secret_key) is True:
+        db['coupons'].insert({"id": 10, 'value': "test test"})
+        return True
+    else:
+        return False
 
 
-def app(environ, start_response):
-    status = '200 OK'
-    headers = [('Content-type', 'text/html')]
-    start_response(status, headers)
+@app.post("/")
+def response_msg():
+    msg = parse_msg()
+    textTpl = """<xml>
+    <ToUserName><![CDATA[%s]]></ToUserName>
+    <FromUserName><![CDATA[%s]]></FromUserName>
+    <CreateTime>%s</CreateTime>
+    <MsgType><![CDATA[%s]]></MsgType>
+    <Content><![CDATA[%s]]></Content>
+    </xml>"""
+    get_db_info = con_db()
+    if get_db_info is True:
+        echostr = textTpl % (msg['FromUserName'],
+                             msg['ToUserName'], str(int(time.time())), msg['MsgType'], '加入成功')
+    else:
+        echostr = textTpl % (msg['FromUserName'],
+                             msg['ToUserName'], str(int(time.time())), msg['MsgType'], '加入失败')
+    return echostr
 
-    try:
-        get_goods(url)
-    except Exception as e:
-        print 'exception message'
-    return 'logging...'
 
+if __name__ == '__main__':
+    debug(True)
+    run(app, host='127.0.0.1', port=8080, reloader=True)
 
-from bae.core.wsgi import WSGIApplication
-application = WSGIApplication(app)
+else:
+    from bae.core.wsgi import WSGIApplication
+    application = WSGIApplication(app)
