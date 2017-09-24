@@ -53,7 +53,7 @@ def response_msg():
     <CreateTime>%s</CreateTime> 
     <MsgType><![CDATA[%s]]></MsgType> 
     <Content><![CDATA[%s]]></Content> 
-    </xml>""" % (msg['FromUserName'], msg['ToUserName'], time.time(), "text", result)
+    </xml>""" % (msg['FromUserName'], msg['ToUserName'], time.time(), "text", result if result is not None else '没有结果')
     return echostr
 
 
