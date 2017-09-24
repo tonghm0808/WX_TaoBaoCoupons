@@ -61,7 +61,7 @@ def response_msg():
     get_info = search_db(msg['Content'])
     if get_info is not None:
         echostr = textTpl % (msg['FromUserName'],
-                             msg['ToUserName'], str(int(time.time())), msg['MsgType'], str(get_info))
+                             msg['ToUserName'], str(int(time.time())), msg['MsgType'], '有结果')
     else:
         echostr = textTpl % (msg['FromUserName'],
                              msg['ToUserName'], str(int(time.time())), msg['MsgType'], '没有结果')
