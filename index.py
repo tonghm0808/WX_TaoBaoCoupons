@@ -1,7 +1,6 @@
 #-*- coding:utf-8 -*-
 
 import pymongo
-from pymongo import MongoClient
 from bs4 import BeautifulSoup
 import requests
 import time
@@ -9,7 +8,7 @@ import time
 header = {
     'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
 }
-url = 'https://m.lapin365.com/index/GetHomeListAjax'
+url = 'http://m.lapin365.com/index/GetHomeListAjax'
 
 
 def get_goods(url, page=1, data=None):
@@ -19,7 +18,6 @@ def get_goods(url, page=1, data=None):
     api_key = '48085b6296ac48acb99e6ff71e863630'
     secret_key = 'dbd3fcb2c6034b4986364603334d6ffe'
     db.authenticate(api_key, secret_key)
-    coupons = db['coupons']
 
     payload = {'limit': 10, 'pageIndex': page, 'clienttype': 0}
     wb_data = requests.post(url, data=payload, headers=header)
@@ -39,7 +37,8 @@ def get_goods(url, page=1, data=None):
                 'originprice': originprice.get_text()[1:-1],
                 'discountprice': discountprice.get_text(),
             }
-            coupons.insert_one(data)
+            db['coupons'].insert_one(data)
+
             print data
     return data
 
