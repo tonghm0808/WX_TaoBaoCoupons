@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 from bs4 import BeautifulSoup
-BeautifulSoup.path.append('/home/bae/app/deps')
 import requests
-requests.path.append('/home/bae/app/deps')
 import time
 import pymongo
-pymongo.path.append('/home/bae/app/deps')
 
 db_name = 'dwADfZdbrNknnSLAmPxt'
 con = pymongo.MongoClient('mongo.duapp.com', 8908)
