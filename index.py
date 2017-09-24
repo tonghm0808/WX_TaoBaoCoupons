@@ -4,6 +4,11 @@ import requests
 import time
 import pymongo
 
+import logging
+import logging.config
+
+logging.config.fileConfig("logging.conf")
+
 db_name = 'dwADfZdbrNknnSLAmPxt'
 api_key = '48085b6296ac48acb99e6ff71e863630'
 secret_key = 'dbd3fcb2c6034b4986364603334d6ffe'
@@ -47,10 +52,12 @@ def app(environ, start_response):
     status = '200 OK'
     headers = [('Content-type', 'text/html')]
     start_response(status, headers)
+
     try:
-        return get_goods(url)
+        get_goods(url)
     except Exception as e:
-        return "exception"
+        print 'exception message'
+    return 'logging...'
 
 
 from bae.core.wsgi import WSGIApplication
