@@ -1,65 +1,78 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 
+from bottle import Bottle, request, run, debug
 import pymongo
-from bs4 import BeautifulSoup
-import requests
+import hashlib
+import xml.etree.ElementTree as ET
 import time
 
-header = {
-    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
-}
-url = 'http://m.lapin365.com/index/GetHomeListAjax'
+app = Bottle()
 
 
-def get_goods(url, page=1, data=None):
+@app.get('/')
+def checkSignature():
+    token = "tonghuanmingdeweixin"
+    signature = request.GET.get('signature', None)
+    timestamp = request.GET.get('timestamp', None)
+    nonce = request.GET.get('nonce', None)
+    echostr = request.GET.get('echostr', None)
+    tmpList = [token, timestamp, nonce]
+    tmpList.sort()
+    tmpstr = "%s%s%s" % tuple(tmpList)
+    hashstr = hashlib.sha1(tmpstr).hexdigest()
+    if hashstr == signature:
+        return echostr
+    else:
+        return False
+
+
+def parse_msg():
+    recvmsg = request.body.read()
+    root = ET.fromstring(recvmsg)
+    msg = {}
+    for child in root:
+        msg[child.tag] = child.text
+    return msg
+
+
+def search_db(temp=None):
     db_name = 'dwADfZdbrNknnSLAmPxt'
-    con = pymongo.MongoClient('mongo.duapp.com', 8908)
-    db = con[db_name]
     api_key = '48085b6296ac48acb99e6ff71e863630'
     secret_key = 'dbd3fcb2c6034b4986364603334d6ffe'
+
+    con = pymongo.MongoClient('mongo.duapp.com', 8908)
+    db = con[db_name]
     db.authenticate(api_key, secret_key)
-
-    payload = {'limit': 10, 'pageIndex': page, 'clienttype': 0}
-    wb_data = requests.post(url, data=payload, headers=header)
-    soup = BeautifulSoup(wb_data.text, 'lxml')
-    titles = soup.select('li > a.couponlink.pic-wrap')
-    links = soup.select('li > a.couponlink.pic-wrap')
-    imgs = soup.select('li > a.couponlink.pic-wrap > img.lazy')
-    originprices = soup.select('div.salesinfo > del.origin-price')
-    discountprices = soup.select('span.aftercoupon > span')
-
-    if data is None:
-        for title, link, img, originprice, discountprice in zip(titles, links, imgs, originprices, discountprices):
-            data = {
-                'title': title.get('title'),
-                'link': link.get('data-couponbuylink'),
-                'img': img.get('data-original'),
-                'originprice': originprice.get_text()[1:-1],
-                'discountprice': discountprice.get_text(),
-            }
-            db['coupons'].insert_one(data)
-
-            print data
-    return data
+    result = []
+    for x in db['coupons'].find({"title": {"$regex": temp}}):
+        result.append(x)
+    return result
 
 
-def get_more():
-    page_num = 1
-    while(1):
-        res = get_goods(url, page_num)
-        if res is None:
-            break
-        else:
-            page_num = page_num + 1
-        time.sleep(1)
+@app.post("/")
+def response_msg():
+    msg = parse_msg()
+    textTpl = """<xml>
+    <ToUserName><![CDATA[%s]]></ToUserName>
+    <FromUserName><![CDATA[%s]]></FromUserName>
+    <CreateTime>%s</CreateTime>
+    <MsgType><![CDATA[%s]]></MsgType>
+    <Content><![CDATA[%s]]></Content>
+    </xml>"""
+    get_info = search_db(msg['Content'])
+    if len(get_info):
+        echostr = textTpl % (msg['FromUserName'],
+                             msg['ToUserName'], str(int(time.time())), msg['MsgType'], get_info[0])
+    else:
+        echostr = textTpl % (msg['FromUserName'],
+                             msg['ToUserName'], str(int(time.time())), msg['MsgType'], '没有搜到结果')
+    return echostr
 
 
-def app(environ, start_response):
-    status = '200 OK'
-    headers = [('Content-type', 'text/html')]
-    start_response(status, headers)
-    get_more()
+if __name__ == '__main__':
+    debug(True)
+    run(app, host='127.0.0.1', port=8080, reloader=True)
 
-
-from bae.core.wsgi import WSGIApplication
-application = WSGIApplication(app)
+else:
+    from bae.core.wsgi import WSGIApplication
+    application = WSGIApplication(app)
