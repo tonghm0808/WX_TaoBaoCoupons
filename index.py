@@ -39,20 +39,20 @@ def parse_msg():
 
 @app.post("/")
 def response_msg():
-    con = pymongo.MongoClient('mongo.duapp.com', 8908)
-    db = con['db_name']
-    db.authenticate(api_key, secret_key)
-    coupons = db['coupons']
+    # con = pymongo.MongoClient('mongo.duapp.com', 8908)
+    # db = con['db_name']
+    # db.authenticate(api_key, secret_key)
+    # coupons = db['coupons']
     msg = parse_msg()
-    result = db[coupons].find(
-        {"title": {"$regex": "%s" % msg['Content']}}, {'_id': 0}).limit(5)
-    con.close()
-    echostr = """<xml> 
-    <ToUserName><![CDATA[%s]]></ToUserName> 
-    <FromUserName><![CDATA[%s]]></FromUserName> 
-    <CreateTime>%s</CreateTime> 
-    <MsgType><![CDATA[%s]]></MsgType> 
-    <Content><![CDATA[%s]]></Content> 
+    # result = coupons.find(
+    #     {"title": {"$regex": "%s" % msg['Content']}}, {'_id': 0}).limit(5)
+    # con.close()
+    echostr = """<xml>
+    <ToUserName><![CDATA[%s]]></ToUserName>
+    <FromUserName><![CDATA[%s]]></FromUserName>
+    <CreateTime>%s</CreateTime>
+    <MsgType><![CDATA[%s]]></MsgType>
+    <Content><![CDATA[%s]]></Content>
     </xml>""" % (msg['FromUserName'], msg['ToUserName'], time.time(), "text", '没有结果')
     return echostr
 
