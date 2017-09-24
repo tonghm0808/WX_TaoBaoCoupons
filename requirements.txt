@@ -1,6 +1,7 @@
+--index-url http://pypi.hustunique.com/simple/
+--extra-index-url https://pypi.python.org/pypi
+
 beautifulsoup4
 lxml
 pymongo
 requests
---index-url http://pypi.hustunique.com/simple/
---extra-index-url https://pypi.python.org/pypi

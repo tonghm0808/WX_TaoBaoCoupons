@@ -59,10 +59,7 @@ def app(environ, start_response):
     status = '200 OK'
     headers = [('Content-type', 'text/html')]
     start_response(status, headers)
-    try:
-        return get_more()
-    except Exception as e:
-        return "exception"
+    get_more()
 
 
 from bae.core.wsgi import WSGIApplication
