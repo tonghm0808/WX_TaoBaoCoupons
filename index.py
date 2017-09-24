@@ -54,7 +54,7 @@ def response_msg():
     <CreateTime>%s</CreateTime>
     <MsgType><![CDATA[%s]]></MsgType>
     <Content><![CDATA[%s]]></Content>
-    </xml>""" % (msg['FromUserName'], msg['ToUserName'], time.time(), 'text', '没有')
+    </xml>""" % (msg['FromUserName'], msg['ToUserName'], time.time(), 'text', '没有信息')
     return echostr
 
 
