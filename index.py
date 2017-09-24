@@ -35,7 +35,7 @@ def parse_msg():
     return msg
 
 
-def con_db():
+def search_db(title=None):
     db_name = 'dwADfZdbrNknnSLAmPxt'
     api_key = '48085b6296ac48acb99e6ff71e863630'
     secret_key = 'dbd3fcb2c6034b4986364603334d6ffe'
@@ -43,8 +43,7 @@ def con_db():
     con = pymongo.MongoClient('mongo.duapp.com', 8908)
     db = con[db_name]
     if db.authenticate(api_key, secret_key) is True:
-        db['coupons'].insert({"id": 10, 'value': "test test"})
-        return True
+        return db.sheet_coupons.find({"title": {"$regex": str(title)}})
     else:
         return False
 
@@ -59,13 +58,13 @@ def response_msg():
     <MsgType><![CDATA[%s]]></MsgType>
     <Content><![CDATA[%s]]></Content>
     </xml>"""
-    get_db_info = con_db()
-    if get_db_info is True:
+    get_info = search_db(msg['Content'])
+    if get_info is not None:
         echostr = textTpl % (msg['FromUserName'],
-                             msg['ToUserName'], str(int(time.time())), msg['MsgType'], '加入成功')
+                             msg['ToUserName'], str(int(time.time())), msg['MsgType'], str(get_info))
     else:
         echostr = textTpl % (msg['FromUserName'],
-                             msg['ToUserName'], str(int(time.time())), msg['MsgType'], '加入失败')
+                             msg['ToUserName'], str(int(time.time())), msg['MsgType'], '没有结果')
     return echostr
 
 
