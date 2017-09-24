@@ -40,13 +40,13 @@ def parse_msg():
 
 @app.post("/")
 def response_msg():
-    con = pymongo.MongoClient('mongo.duapp.com', 8908)
-    db = con['db_name']
-    db.authenticate(api_key, secret_key)
-    coupons = db['coupons']
+    # con = pymongo.MongoClient('mongo.duapp.com', 8908)
+    # db = con['db_name']
+    # db.authenticate(api_key, secret_key)
+    # coupons = db['coupons']
     msg = parse_msg()
-    result = coupons.find({"title": {"$regex": "%s" % msg['Content']}})
-    con.close()
+    # result = coupons.find({"title": {"$regex": "%s" % msg['Content']}})
+    # con.close()
     echostr = """<xml>
     <ToUserName><![CDATA[%s]]></ToUserName>
     <FromUserName><![CDATA[%s]]></FromUserName>
