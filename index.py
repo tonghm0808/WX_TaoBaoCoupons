@@ -65,7 +65,7 @@ def response_msg():
                              msg['ToUserName'], str(int(time.time())), msg['MsgType'], '没有结果')
     else:
         echostr = textTpl % (msg['FromUserName'],
-                             msg['ToUserName'], str(int(time.time())), msg['MsgType'], str(get_info[0]))
+                             msg['ToUserName'], str(int(time.time())), msg['MsgType'], get_info[0])
     return echostr
 
 
