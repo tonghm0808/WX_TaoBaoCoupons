@@ -1,66 +1,36 @@
 #-*- coding:utf-8 -*-
-from bottle import *
-import hashlib
-import xml.etree.ElementTree as ET
-import time
 import pymongo
-
-db_name = 'dwADfZdbrNknnSLAmPxt'
-api_key = '48085b6296ac48acb99e6ff71e863630'
-secret_key = 'dbd3fcb2c6034b4986364603334d6ffe'
-
-app = Bottle()
+from bae.core.wsgi import WSGIApplication
 
 
-@app.get('/')
-def checkSignature():
-    token = "tonghuanmingdeweixin"
-    signature = request.GET.get('signature', None)
-    timestamp = request.GET.get('timestamp', None)
-    nonce = request.GET.get('nonce', None)
-    echostr = request.GET.get('echostr', None)
-    tmpList = [token, timestamp, nonce]
-    tmpList.sort()
-    tmpstr = "%s%s%s" % tuple(tmpList)
-    hashstr = hashlib.sha1(tmpstr).hexdigest()
-    if hashstr == signature:
-        return echostr
-    else:
-        return False
+def test_mongo():
+    # 连接MongoDB服务
+    # 从管理控制台获取host, port, db_name, api_key, secret_key
+    con = pymongo.MongoClient("mongo.duapp.com", 8908)
+    db_name = "dwADfZdbrNknnSLAmPxt"  # 数据库名称
+    db = con[db_name]
+    api_key = "48085b6296ac48acb99e6ff71e863630"  # 用户AK
+    secret_key = "dbd3fcb2c6034b4986364603334d6ffe"  # 用户SK
+    db.authenticate(api_key, secret_key)
+
+    # 插入数据到集合test
+    collection_name = 'test'
+    db[collection_name].insert({"id": 10, 'value': "test test"})
+
+    # 查询集合test
+    cursor = db[collection_name].find()
+    con.close()
+    return "select collection test %s" % str(cursor[0])
 
 
-def parse_msg():
-    recvmsg = request.body.read()
-    root = ET.fromstring(recvmsg)
-    msg = {}
-    for child in root:
-        msg[child.tag] = child.text
-    return msg
+def app(environ, start_response):
+    status = '200 OK'
+    headers = [('Content-type', 'text/html')]
+    start_response(status, headers)
+    try:
+        return test_mongo()
+    except Exception as e:
+        return "exception"
 
 
-@app.post("/")
-def response_msg():
-    # con = pymongo.MongoClient('mongo.duapp.com', 8908)
-    # db = con['db_name']
-    # db.authenticate(api_key, secret_key)
-    # coupons = db['coupons']
-    msg = parse_msg()
-    # result = coupons.find({"title": {"$regex": "%s" % msg['Content']}})
-    # con.close()
-    echostr = """<xml>
-    <ToUserName><![CDATA[%s]]></ToUserName>
-    <FromUserName><![CDATA[%s]]></FromUserName>
-    <CreateTime>%s</CreateTime>
-    <MsgType><![CDATA[%s]]></MsgType>
-    <Content><![CDATA[%s]]></Content>
-    </xml>""" % (msg['FromUserName'], msg['ToUserName'], time.time(), 'text', '没有结果')
-    return echostr
-
-
-if __name__ == '__main__':
-    debug(True)
-    run(app, host='127.0.0.1', port=8080, reloader=True)
-
-else:
-    from bae.core.wsgi import WSGIApplication
-    application = WSGIApplication(app)
+application = WSGIApplication(app)
