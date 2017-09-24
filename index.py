@@ -8,7 +8,6 @@ import time
 
 
 db_name = 'dwADfZdbrNknnSLAmPxt'
-collection_name = 'coupons'
 api_key = '48085b6296ac48acb99e6ff71e863630'
 secret_key = 'dbd3fcb2c6034b4986364603334d6ffe'
 
@@ -43,13 +42,6 @@ def parse_msg():
 
 @app.post("/")
 def response_msg():
-    try:
-        con = pymongo.MongoClient('mongo.duapp.com', 8908)
-        db = con['db_name']
-        db.authenticate(api_key, secret_key)
-        db[collection_name].insert({"id": 10, 'value': "test test"})
-    except Exception as e:
-        return "exception"
     msg = parse_msg()
     # result = coupons.find({"title": {"$regex": "%s" % msg['Content']}})
     echostr = """<xml>
@@ -63,6 +55,13 @@ def response_msg():
 
 
 if __name__ == '__main__':
+    try:
+        con = pymongo.MongoClient('mongo.duapp.com', 8908)
+        db = con['db_name']
+        db.authenticate(api_key, secret_key)
+        db['coupons'].insert({"id": 10, 'value': "test test"})
+    except Exception as e:
+        return "exception"
     debug(True)
     run(app, host='127.0.0.1', port=8080, reloader=True)
 
