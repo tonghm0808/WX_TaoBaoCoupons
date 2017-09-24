@@ -35,7 +35,7 @@ def parse_msg():
     return msg
 
 
-def search_db(title=None):
+def search_db(temp=None):
     db_name = 'dwADfZdbrNknnSLAmPxt'
     api_key = '48085b6296ac48acb99e6ff71e863630'
     secret_key = 'dbd3fcb2c6034b4986364603334d6ffe'
@@ -43,7 +43,7 @@ def search_db(title=None):
     con = pymongo.MongoClient('mongo.duapp.com', 8908)
     db = con[db_name]
     if db.authenticate(api_key, secret_key) is True:
-        return db.sheet_coupons.find({"title": {"$regex": str(title)}})
+        return db['coupons'].find({"title": {"$regex": str(temp)}})
     else:
         return False
 
