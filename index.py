@@ -1,12 +1,12 @@
 # -*- coding:utf-8 -*-
 
-import bottle
+from bottle import Bottle
 import pymongo
 import hashlib
 import xml.etree.ElementTree as ET
 import time
 
-app = Bottle(__name__)
+app = Bottle()
 
 
 @app.get('/')
@@ -41,7 +41,7 @@ def con_db():
     secret_key = 'dbd3fcb2c6034b4986364603334d6ffe'
 
     con = pymongo.MongoClient('mongo.duapp.com', 8908)
-    db = con['db_name']
+    db = con[db_name]
     if db.authenticate(api_key, secret_key) is True:
         db['coupons'].insert({"id": 10, 'value': "test test"})
         return True
