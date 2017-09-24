@@ -33,11 +33,6 @@ def checkSignature():
 
 
 def parse_msg():
-    con = pymongo.MongoClient('mongo.duapp.com', 8908)
-    db = con['db_name']
-    db.authenticate(api_key, secret_key)
-    db[collection_name].insert({"id": 10, 'value': "test test"})
-
     recvmsg = request.body.read()
     root = ET.fromstring(recvmsg)
     msg = {}
@@ -48,6 +43,13 @@ def parse_msg():
 
 @app.post("/")
 def response_msg():
+    try:
+        con = pymongo.MongoClient('mongo.duapp.com', 8908)
+        db = con['db_name']
+        db.authenticate(api_key, secret_key)
+        db[collection_name].insert({"id": 10, 'value': "test test"})
+    except Exception as e:
+        return "exception"
     msg = parse_msg()
     # result = coupons.find({"title": {"$regex": "%s" % msg['Content']}})
     echostr = """<xml>
