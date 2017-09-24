@@ -1,12 +1,12 @@
 #-*- coding:utf-8 -*-
 import pymongo
-from pymongo import MongoClient
+from bae.core.wsgi import WSGIApplication
 
 
 def test_mongo():
     # 连接MongoDB服务
     # 从管理控制台获取host, port, db_name, api_key, secret_key
-    con = MongoClient("mongo.duapp.com", 8908)
+    con = pymongo.MongoClient("mongo.duapp.com", 8908)
     db_name = "dwADfZdbrNknnSLAmPxt"  # 数据库名称
     db = con[db_name]
     api_key = "48085b6296ac48acb99e6ff71e863630"  # 用户AK
@@ -33,5 +33,4 @@ def app(environ, start_response):
         return "exception"
 
 
-from bae.core.wsgi import WSGIApplication
 application = WSGIApplication(app)
