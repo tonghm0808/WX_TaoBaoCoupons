@@ -45,8 +45,7 @@ def response_msg():
     db.authenticate(api_key, secret_key)
     coupons = db['coupons']
     msg = parse_msg()
-    result = coupons.find(
-        {"title": {"$regex": "%s" % msg['Content']}}, {'_id': 0}).limit(5)
+    result = coupons.find({"title": {"$regex": "%s" % msg['Content']}})
     con.close()
     echostr = """<xml>
     <ToUserName><![CDATA[%s]]></ToUserName>
