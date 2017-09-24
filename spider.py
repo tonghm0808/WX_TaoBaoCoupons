@@ -38,6 +38,7 @@ def get_goods(url, page=1, data=None):
                 'discountprice': discountprice.get_text(),
             }
             coupons.insert_one(data)
+            print data
     return data
 
 
