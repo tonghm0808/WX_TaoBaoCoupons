@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-from bottle import Bottle, request, route, run, debug, get, post
+from bottle import Bottle, request, run, debug
 import pymongo
 import hashlib
 import xml.etree.ElementTree as ET
@@ -60,7 +60,7 @@ def response_msg():
     <Content><![CDATA[%s]]></Content>
     </xml>"""
     get_info = search_db(msg['Content'])
-    if get_info is None:
+    if get_info:
         echostr = textTpl % (msg['FromUserName'],
                              msg['ToUserName'], str(int(time.time())), msg['MsgType'], '没有结果')
     else:
