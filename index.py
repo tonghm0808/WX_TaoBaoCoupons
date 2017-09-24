@@ -9,16 +9,16 @@ db_name = 'dwADfZdbrNknnSLAmPxt'
 api_key = '48085b6296ac48acb99e6ff71e863630'
 secret_key = 'dbd3fcb2c6034b4986364603334d6ffe'
 
-app = Bottle()
+app = bottle()
 
 
 @app.get('/')
 def checkSignature():
     token = "tonghuanmingdeweixin"
-    signature = request.GET.get('signature', None)
-    timestamp = request.GET.get('timestamp', None)
-    nonce = request.GET.get('nonce', None)
-    echostr = request.GET.get('echostr', None)
+    signature = app.request.GET.get('signature', None)
+    timestamp = app.request.GET.get('timestamp', None)
+    nonce = app.request.GET.get('nonce', None)
+    echostr = app.request.GET.get('echostr', None)
     tmpList = [token, timestamp, nonce]
     tmpList.sort()
     tmpstr = "%s%s%s" % tuple(tmpList)
@@ -30,7 +30,7 @@ def checkSignature():
 
 
 def parse_msg():
-    recvmsg = request.body.read()
+    recvmsg = app.request.body.read()
     root = ET.fromstring(recvmsg)
     msg = {}
     for child in root:
