@@ -1,7 +1,7 @@
 #-*- coding:utf-8 -*-
-import pymongo
-from bae.core.wsgi import WSGIApplication
+
 from bottle import *
+import pymongo
 import hashlib
 import xml.etree.ElementTree as ET
 import time
@@ -59,11 +59,13 @@ if __name__ == '__main__':
         con = pymongo.MongoClient('mongo.duapp.com', 8908)
         db = con['db_name']
         db.authenticate(api_key, secret_key)
-        db['coupons'].insert({"id": 10, 'value': "test test"})
+        #db['coupons'].insert({"id": 10, 'value': "test test"})
     except Exception as e:
-        return "exception"
+        print 'exception'
+
     debug(True)
     run(app, host='127.0.0.1', port=8080, reloader=True)
 
 else:
+    from bae.core.wsgi import WSGIApplication
     application = WSGIApplication(app)
