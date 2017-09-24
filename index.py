@@ -11,10 +11,7 @@ db_name = 'dwADfZdbrNknnSLAmPxt'
 collection_name = 'coupons'
 api_key = '48085b6296ac48acb99e6ff71e863630'
 secret_key = 'dbd3fcb2c6034b4986364603334d6ffe'
-# con = pymongo.MongoClient('mongo.duapp.com', 8908)
-# db = con['db_name']
-# db.authenticate(api_key, secret_key)
-# db[collection_name].insert({"id": 10, 'value': "test test"})
+
 app = Bottle()
 
 
@@ -36,6 +33,11 @@ def checkSignature():
 
 
 def parse_msg():
+    con = pymongo.MongoClient('mongo.duapp.com', 8908)
+    db = con['db_name']
+    db.authenticate(api_key, secret_key)
+    db[collection_name].insert({"id": 10, 'value': "test test"})
+
     recvmsg = request.body.read()
     root = ET.fromstring(recvmsg)
     msg = {}
