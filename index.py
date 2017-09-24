@@ -15,10 +15,10 @@ app = Bottle()
 @app.get('/')
 def checkSignature():
     token = "tonghuanmingdeweixin"
-    signature = app.request.GET.get('signature', None)
-    timestamp = app.request.GET.get('timestamp', None)
-    nonce = app.request.GET.get('nonce', None)
-    echostr = app.request.GET.get('echostr', None)
+    signature = request.GET.get('signature', None)
+    timestamp = request.GET.get('timestamp', None)
+    nonce = request.GET.get('nonce', None)
+    echostr = request.GET.get('echostr', None)
     tmpList = [token, timestamp, nonce]
     tmpList.sort()
     tmpstr = "%s%s%s" % tuple(tmpList)
@@ -30,7 +30,7 @@ def checkSignature():
 
 
 def parse_msg():
-    recvmsg = app.request.body.read()
+    recvmsg = request.body.read()
     root = ET.fromstring(recvmsg)
     msg = {}
     for child in root:
@@ -59,8 +59,8 @@ def response_msg():
 
 
 if __name__ == "__main__":
-    app.debug(True)
-    app.run(host='127.0.0.1', port=8080, reloader=True)
+    debug(True)
+    run(host='127.0.0.1', port=8080, reloader=True)
 
 else:
     from bae.core.wsgi import WSGIApplication
