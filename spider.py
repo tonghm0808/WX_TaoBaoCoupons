@@ -46,6 +46,7 @@ page_num = 1
 while(1):
     res = get_goods(url, page_num)
     if res is None:
+        con.close()
         break
     else:
         page_num = page_num + 1

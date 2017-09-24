@@ -54,14 +54,14 @@ def response_msg():
     <CreateTime>%s</CreateTime>
     <MsgType><![CDATA[%s]]></MsgType>
     <Content><![CDATA[%s]]></Content>
-    </xml>""" % (msg['FromUserName'], msg['ToUserName'], time.time(), 'text', result if result is not None else '没有结果')
+    </xml>""" % (msg['FromUserName'], msg['ToUserName'], time.time()), 'text', '没有结果')
     return echostr
 
 
 if __name__ == '__main__':
     debug(True)
-    run(app, host='127.0.0.1', port=8080, reloader=True)
+    run(app, host = '127.0.0.1', port = 8080, reloader = True)
 
 else:
     from bae.core.wsgi import WSGIApplication
-    application = WSGIApplication(app)
+    application=WSGIApplication(app)
