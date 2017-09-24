@@ -2,13 +2,10 @@
 import sys
 sys.path.append('/home/bae/app/deps')
 from bs4 import BeautifulSoup
-BeautifulSoup.path.append('/home/bae/app/deps')
 import requests
-requests.path.append('/home/bae/app/deps')
 import time
-time.path.append('/home/bae/app/deps')
 import pymongo
-pymongo.path.append('/home/bae/app/deps')
+
 
 db_name = 'dwADfZdbrNknnSLAmPxt'
 con = pymongo.MongoClient('mongo.duapp.com', 8908)
