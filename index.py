@@ -85,7 +85,7 @@ def response_msg():
     if length > 5:
         length = 5
     if length:
-        for i in range(0, length - 1):
+        for i in range(0, length):
             temp = item % (get_info[i]['title'],
                            u'原价%s元，折后%s元！' % (
                                get_info[i]['originprice'], get_info[i]['discountprice']),
