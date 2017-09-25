@@ -66,28 +66,35 @@ def response_msg():
     <FromUserName><![CDATA[%s]]></FromUserName>
     <CreateTime>%s</CreateTime>
     <MsgType><![CDATA[news]]></MsgType>
-    <ArticleCount>1</ArticleCount>
+    <ArticleCount>%d</ArticleCount>
     <Articles>
-    <item>
+    %s
+    </Articles>
+    </xml>'''
+
+    item = '''<item>
     <Title><![CDATA[%s]]></Title> 
     <Description><![CDATA[%s]]></Description>
     <PicUrl><![CDATA[%s]]></PicUrl>
     <Url><![CDATA[%s]]></Url>
-    </item>
-    </Articles>
-    </xml>'''
+    </item>'''
 
+    items = ''
     get_info = search_db(msg['Content'])
     if len(get_info):
-        description = u'原价%s元，折后%s元！' % (
-            get_info[0]['originprice'], get_info[0]['discountprice'])
+        for i, j in enumerate(get_info):
+            temp = item % (j[i]['title'],
+                           u'原价%s元，折后%s元！' % (
+                               j[i]['originprice'], j[i]['discountprice']),
+                           j[i]['img'],
+                           j[i]['link'])
+            items = items + temp
+
         echostr = pictextTpl % (msg['FromUserName'],
                                 msg['ToUserName'],
                                 str(int(time.time())),
-                                get_info[0]['title'],
-                                description,
-                                get_info[0]['img'],
-                                get_info[0]['link'])
+                                len(get_info),
+                                items)
     else:
         echostr = textTpl % (msg['FromUserName'],
                              msg['ToUserName'],
