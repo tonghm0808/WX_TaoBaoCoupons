@@ -44,7 +44,7 @@ def search_db(temp=None):
     db = con[db_name]
     db.authenticate(api_key, secret_key)
     result = []
-    for x in db['coupons'].find({"title": {"$regex": temp}}):
+    for x in db['coupons'].find({"title": {"$regex": temp}}).limit(10):
         result.append(x)
     return result
 
@@ -83,8 +83,7 @@ def response_msg():
     items = ''
     temp = ''
     length = len(get_info)
-    if length > 9:
-        length = 9
+
     if length:
         for i in range(0, length):
             temp = item % (get_info[i]['title'],
