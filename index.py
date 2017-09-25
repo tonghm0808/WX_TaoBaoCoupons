@@ -45,27 +45,53 @@ def search_db(temp=None):
     db.authenticate(api_key, secret_key)
     result = []
     for x in db['coupons'].find({"title": {"$regex": temp}}):
-        result.append(repr(x))
+        result.append(x)
     return result
 
 
 @app.post("/")
 def response_msg():
     msg = parse_msg()
-    textTpl = """<xml>
+    textTpl = '''<xml>
     <ToUserName><![CDATA[%s]]></ToUserName>
     <FromUserName><![CDATA[%s]]></FromUserName>
     <CreateTime>%s</CreateTime>
     <MsgType><![CDATA[%s]]></MsgType>
     <Content><![CDATA[%s]]></Content>
-    </xml>"""
+    <FuncFlag>0</FuncFlag>
+    </xml>'''
+
+    pictextTpl = '''<xml>
+    <ToUserName><![CDATA[%s]]></ToUserName>
+    <FromUserName><![CDATA[%s]]></FromUserName>
+    <CreateTime>%s</CreateTime>
+    <MsgType><![CDATA[news]]></MsgType>
+    <ArticleCount>1</ArticleCount>
+    <Articles>
+    <item>
+    <Title><![CDATA[%s]]></Title> 
+    <Description><![CDATA[%s]]></Description>
+    <PicUrl><![CDATA[%s]]></PicUrl>
+    <Url><![CDATA[%s]]></Url>
+    </item>
+    </Articles>
+    </xml>'''
+
     get_info = search_db(msg['Content'])
     if len(get_info):
-        echostr = textTpl % (msg['FromUserName'],
-                             msg['ToUserName'], str(int(time.time())), msg['MsgType'], get_info[0])
+        echostr = pictextTpl % (msg['FromUserName'],
+                                msg['ToUserName'],
+                                str(int(time.time())),
+                                get_info[0]['title'],
+                                get_info[0]['title'],
+                                get_info[0]['img'],
+                                get_info[0]['link'])
     else:
         echostr = textTpl % (msg['FromUserName'],
-                             msg['ToUserName'], str(int(time.time())), msg['MsgType'], '没有搜到结果')
+                             msg['ToUserName'],
+                             str(int(time.time())),
+                             msg['MsgType'],
+                             '没有搜到结果')
     return echostr
 
 
