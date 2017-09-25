@@ -77,7 +77,7 @@ def response_msg():
     </Articles>
     </xml>'''
 
-    description = '原价%s元，折后%s元！'
+    description = '''原价%s元，折后%s元！'''
 
     get_info = search_db(msg['Content'])
     if len(get_info):
