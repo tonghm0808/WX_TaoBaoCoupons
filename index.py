@@ -66,7 +66,7 @@ def response_msg():
     else:
         echostr = textTpl % (msg['FromUserName'],
                              msg['ToUserName'], str(int(time.time())), msg['MsgType'], '没有搜到结果')
-    return echostr
+    return echostr.encode('utf-8')
 
 
 if __name__ == '__main__':
