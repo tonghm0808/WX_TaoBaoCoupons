@@ -79,11 +79,13 @@ def response_msg():
 
     get_info = search_db(msg['Content'])
     if len(get_info):
+        description = '原价%s元，折后%s元！' % (
+            get_info[0]['originprice'], get_info[0]['discountprice'])
         echostr = pictextTpl % (msg['FromUserName'],
                                 msg['ToUserName'],
                                 str(int(time.time())),
                                 get_info[0]['title'],
-                                get_info[0]['title'],
+                                description,
                                 get_info[0]['img'],
                                 get_info[0]['link'])
     else:
