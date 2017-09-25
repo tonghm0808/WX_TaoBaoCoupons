@@ -76,7 +76,7 @@ def response_msg():
     <Title><![CDATA[%s]]></Title> 
     <Description><![CDATA[%s]]></Description>
     <PicUrl><![CDATA[%s]]></PicUrl>
-    <Url><![CDATA[%s240]]></Url>
+    <Url><![CDATA[%s320]]></Url>
     </item>'''
 
     get_info = search_db(msg['Content'])
