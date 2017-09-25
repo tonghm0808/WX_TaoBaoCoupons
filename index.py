@@ -44,7 +44,7 @@ def search_db(temp=None):
     db = con[db_name]
     db.authenticate(api_key, secret_key)
     result = []
-    for x in db['coupons'].find({"title": {"$regex": temp}}).limit(10):
+    for x in db['coupons'].find({"title": {"$regex": temp}}).limit(8):
         result.append(x)
     return result
 
