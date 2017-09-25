@@ -83,8 +83,8 @@ def response_msg():
     items = ''
     temp = ''
     length = len(get_info)
-    if length > 10:
-        length = 10
+    if length > 9:
+        length = 9
     if length:
         for i in range(0, length):
             temp = item % (get_info[i]['title'],
