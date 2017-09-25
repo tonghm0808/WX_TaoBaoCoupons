@@ -76,7 +76,7 @@ def response_msg():
     <Title><![CDATA[%s]]></Title> 
     <Description><![CDATA[%s]]></Description>
     <PicUrl><![CDATA[%s]]></PicUrl>
-    <Url><![CDATA[%s]]></Url>
+    <Url><![CDATA[%s240]]></Url>
     </item>'''
 
     get_info = search_db(msg['Content'])
@@ -90,7 +90,7 @@ def response_msg():
                            u'原价%s元，折后%s元！' % (
                                get_info[i]['originprice'], get_info[i]['discountprice']),
                            get_info[i]['img'],
-                           get_info[i]['link'])
+                           get_info[i]['link'][0:-3])
             items = items + temp
 
         echostr = pictextTpl % (msg['FromUserName'],
