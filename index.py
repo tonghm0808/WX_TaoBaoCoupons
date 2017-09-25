@@ -83,7 +83,7 @@ def response_msg():
     i = 0
     get_info = search_db(msg['Content'])
     if len(get_info):
-        for x in get_info:
+        for j in get_info:
             temp = item % (j[i]['title'],
                            u'原价%s元，折后%s元！' % (
                                j[i]['originprice'], j[i]['discountprice']),
