@@ -80,15 +80,17 @@ def response_msg():
     </item>'''
 
     items = ''
+    i = 0
     get_info = search_db(msg['Content'])
     if len(get_info):
-        for i, j in enumerate(get_info):
+        for x in get_info:
             temp = item % (j[i]['title'],
                            u'原价%s元，折后%s元！' % (
                                j[i]['originprice'], j[i]['discountprice']),
                            j[i]['img'],
                            j[i]['link'])
             items = items + temp
+            i = i + 1
 
         echostr = pictextTpl % (msg['FromUserName'],
                                 msg['ToUserName'],
