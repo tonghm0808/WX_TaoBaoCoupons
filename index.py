@@ -70,7 +70,7 @@ def response_msg():
     <Articles>
     <item>
     <Title><![CDATA[%s]]></Title> 
-    <Description><![CDATA[%s]]></Description>
+    <Description><![CDATA[%s\u5143\uff01]]></Description>
     <PicUrl><![CDATA[%s]]></PicUrl>
     <Url><![CDATA[%s]]></Url>
     </item>
