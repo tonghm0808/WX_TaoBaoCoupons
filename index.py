@@ -84,7 +84,7 @@ def response_msg():
                                 str(int(time.time())),
                                 get_info[0]['title'],
                                 get_info[0]['originprice'],
-                                get_info[0]['discountprice'].decode('ascii'),
+                                get_info[0]['originprice'],
                                 get_info[0]['img'],
                                 get_info[0]['link'])
     else:
