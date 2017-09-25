@@ -62,11 +62,13 @@ def response_msg():
     get_info = search_db(msg['Content'])
     if len(get_info):
         echostr = textTpl % (msg['FromUserName'],
-                             msg['ToUserName'], str(int(time.time())), msg['MsgType'], get_info[0])
+                             msg['ToUserName'], str(
+                                 int(time.time())), msg['MsgType'], get_info[0].decode("unicode-escape")
+                             )
     else:
         echostr = textTpl % (msg['FromUserName'],
                              msg['ToUserName'], str(int(time.time())), msg['MsgType'], '没有搜到结果')
-    return echostr.decode("raw_unicode-escape")
+    return echostr
 
 
 if __name__ == '__main__':
