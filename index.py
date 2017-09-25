@@ -82,7 +82,9 @@ def response_msg():
     get_info = search_db(msg['Content'])
     items = ''
     temp = ''
-    length = len(get_info) if len(get_info) <= 10 else 10
+    length = len(get_info)
+    if length > 10:
+        length = 10
     if length:
         for i in range(0, length):
             temp = item % (get_info[i]['title'],
