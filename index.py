@@ -66,7 +66,7 @@ def response_msg():
     <FromUserName><![CDATA[%s]]></FromUserName>
     <CreateTime>%s</CreateTime>
     <MsgType><![CDATA[news]]></MsgType>
-    <ArticleCount>%d</ArticleCount>
+    <ArticleCount>%s</ArticleCount>
     <Articles>
     %s
     </Articles>
@@ -79,8 +79,9 @@ def response_msg():
     <Url><![CDATA[%s]]></Url>
     </item>'''
 
-    items = ''
     get_info = search_db(msg['Content'])
+    items = ''
+    temp = ''
     length = len(get_info)
     if length > 5:
         length = 5
@@ -96,7 +97,7 @@ def response_msg():
         echostr = pictextTpl % (msg['FromUserName'],
                                 msg['ToUserName'],
                                 str(int(time.time())),
-                                len(get_info),
+                                str(length),
                                 items)
     else:
         echostr = textTpl % (msg['FromUserName'],
