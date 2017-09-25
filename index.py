@@ -70,7 +70,7 @@ def response_msg():
     <Articles>
     <item>
     <Title><![CDATA[%s]]></Title> 
-    <Description><![CDATA[原价%s元，折后%s元！]></Description>
+    <Description><![CDATA[%s元！]></Description>
     <PicUrl><![CDATA[%s]]></PicUrl>
     <Url><![CDATA[%s]]></Url>
     </item>
@@ -83,7 +83,6 @@ def response_msg():
                                 msg['ToUserName'],
                                 str(int(time.time())),
                                 get_info[0]['title'],
-                                get_info[0]['originprice'],
                                 get_info[0]['originprice'],
                                 get_info[0]['img'],
                                 get_info[0]['link'])
