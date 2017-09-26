@@ -44,7 +44,7 @@ def search_db(temp=None):
     db = con[db_name]
     db.authenticate(api_key, secret_key)
     result = []
-    for x in db['coupons'].find({"title": {"$regex": temp}}).limit(8).sort('_id', -1):
+    for x in db['coupons'].find({"title": {"$regex": temp}}).limit(8).sort('biz30Day', -1):
         result.append(x)
     return result
 
@@ -73,7 +73,7 @@ def response_msg():
     </xml>'''
 
     item = '''<item>
-    <Title><![CDATA[%s%s]]></Title> 
+    <Title><![CDATA[%s]]></Title> 
     <Description><![CDATA[%s]]></Description>
     <PicUrl><![CDATA[%s]]></PicUrl>
     <Url><![CDATA[%s]]></Url>
@@ -86,13 +86,12 @@ def response_msg():
 
     if length:
         for i in range(0, length):
-            description = u'【原价%s券后%s】' % (
+            description = u'【原价%s，券后%s！】' % (
                 get_info[i]['originprice'], get_info[i]['discountprice'])
-            temp = item % (description,
-                           get_info[i]['title'],
+            temp = item % (get_info[i]['title'],
                            description,
-                           get_info[i]['img'],
-                           get_info[i]['link'])
+                           get_info[i]['picUrl'],
+                           get_info[i]['shareUrl'])
             items = items + temp
 
         echostr = pictextTpl % (msg['FromUserName'],
