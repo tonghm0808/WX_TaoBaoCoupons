@@ -73,7 +73,7 @@ def response_msg():
     </xml>'''
 
     item = '''<item>
-    <Title><![CDATA[%s]]></Title> 
+    <Title><![CDATA[%s%s]]></Title> 
     <Description><![CDATA[%s]]></Description>
     <PicUrl><![CDATA[http:%s]]></PicUrl>
     <Url><![CDATA[http:%s]]></Url>
@@ -86,9 +86,10 @@ def response_msg():
 
     if length:
         for i in range(0, length):
-            description = u'【原价%s，券后%s！】' % (
+            description = u'【原价%s 券后%s】' % (
                 get_info[i]['reservePrice'], get_info[i]['discountPrice'])
-            temp = item % (get_info[i]['title'],
+            temp = item % (description,
+                           get_info[i]['title'],
                            description,
                            get_info[i]['picUrl'],
                            get_info[i]['shareUrl'])
