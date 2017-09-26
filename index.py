@@ -86,7 +86,7 @@ def response_msg():
 
     if length:
         for i in range(0, length):
-            description = u'【原价%s，折后%s！】' % (
+            description = u'【原价%s券后%s】' % (
                 get_info[i]['originprice'], get_info[i]['discountprice'])
             temp = item % (description,
                            get_info[i]['title'],
