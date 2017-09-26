@@ -73,10 +73,10 @@ def response_msg():
     </xml>'''
 
     item = '''<item>
-    <Title><![CDATA[%s]]></Title> 
+    <Title><![CDATA[【%s】%s]]></Title> 
     <Description><![CDATA[%s]]></Description>
     <PicUrl><![CDATA[%s]]></PicUrl>
-    <Url><![CDATA[%s320]]></Url>
+    <Url><![CDATA[%s]]></Url>
     </item>'''
 
     get_info = search_db(msg['Content'])
@@ -86,11 +86,13 @@ def response_msg():
 
     if length:
         for i in range(0, length):
-            temp = item % (get_info[i]['title'],
-                           u'原价%s元，折后%s元！' % (
-                               get_info[i]['originprice'], get_info[i]['discountprice']),
+            description = u'原价%s，折后%s' % (
+                get_info[i]['originprice'], get_info[i]['discountprice'])
+            temp = item % (description,
+                           get_info[i]['title'],
+                           description,
                            get_info[i]['img'],
-                           get_info[i]['link'][0:-3])
+                           get_info[i]['link'])
             items = items + temp
 
         echostr = pictextTpl % (msg['FromUserName'],
