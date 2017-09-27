@@ -76,7 +76,7 @@ def response_msg():
     <Title><![CDATA[%s%s]]></Title> 
     <Description><![CDATA[%s]]></Description>
     <PicUrl><![CDATA[http:%s]]></PicUrl>
-    <Url><![CDATA[http:%s#mp.weixin.qq.com]]></Url>
+    <Url><![CDATA[http:%s]]></Url>
     </item>'''
 
     get_info = search_db(msg['Content'])
