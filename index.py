@@ -75,8 +75,8 @@ def response_msg():
     item = '''<item>
     <Title><![CDATA[%s%s]]></Title> 
     <Description><![CDATA[%s]]></Description>
-    <PicUrl><![CDATA[http:%s]]></PicUrl>
-    <Url><![CDATA[http:%s]]></Url>
+    <PicUrl><![CDATA[%s]]></PicUrl>
+    <Url><![CDATA[%s]]></Url>
     </item>'''
 
     get_info = search_db(msg['Content'])
@@ -105,7 +105,7 @@ def response_msg():
                              msg['ToUserName'],
                              str(int(time.time())),
                              msg['MsgType'],
-                             '没有搜到结果')
+                             '没有搜到结果，请换个关键字搜索！')
     return echostr
 
 
