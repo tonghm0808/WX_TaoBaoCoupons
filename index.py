@@ -58,7 +58,6 @@ def search_db(temp=None):
 
     for x in db_result:
         result.append(x)
-
     return result
 
 
