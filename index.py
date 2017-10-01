@@ -6,9 +6,9 @@ import hashlib
 import xml.etree.ElementTree as ET
 import time
 
-db_name = 'dwADfZdbrNknnSLAmPxt'
-api_key = '48085b6296ac48acb99e6ff71e863630'
-secret_key = 'dbd3fcb2c6034b4986364603334d6ffe'
+DB_NAME = 'dwADfZdbrNknnSLAmPxt'
+DB_API_KEY = '48085b6296ac48acb99e6ff71e863630'
+DB_SECRET_KEY = 'dbd3fcb2c6034b4986364603334d6ffe'
 
 app = Bottle()
 
@@ -40,11 +40,18 @@ def parse_msg():
 
 
 def search_db(temp=None):
+    temp_list = temp.split(' ')
     con = pymongo.MongoClient('mongo.duapp.com', 8908)
-    db = con[db_name]
-    db.authenticate(api_key, secret_key)
+    db = con[DB_NAME]
+    db.authenticate(DB_API_KEY, DB_SECRET_KEY)
+    if len(temp_list) > 1:
+        db_result = db['coupons'].find({'title': {'$regex': '%s' % temp_list[0]}}, {
+            'title': {'$regex': '%s' % temp_list[1]}}).limit(8).sort('biz30Day', -1)
+    else:
+        db_result = db_result = db['coupons'].find(
+            {'title': {'$regex': '%s' % temp_list[0]}}).limit(8).sort('biz30Day', -1)
     result = []
-    for x in db['coupons'].find({'title': {'$regex': temp}}).limit(8).sort('biz30Day', -1):
+    for x in db_result:
         result.append(x)
     return result
 
@@ -105,7 +112,7 @@ def response_msg():
                              msg['ToUserName'],
                              str(int(time.time())),
                              msg['MsgType'],
-                             '没有搜到结果，请换个关键字搜索！')
+                             '没有搜到结果，请换个关键字搜索！关键字之间请用空格分开！')
     return echostr
 
 
