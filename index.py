@@ -45,7 +45,7 @@ def search_db(temp=None):
     db = con[DB_NAME]
     db.authenticate(DB_API_KEY, DB_SECRET_KEY)
     if len(temp_list) > 1:
-        db_result = db['coupons'].find({'title': {'$regex': '.*%s.*%s.*|.*%s.*%s.*' % (
+        db_result = db['coupons'].find({'title': {'$regex': '(?:.*%s.*%s.*|.*%s.*%s.*)' % (
             temp_list[0], temp_list[1], temp_list[1], temp_list[0])}}).limit(8).sort('biz30Day', -1)
     else:
         db_result = db_result = db['coupons'].find(
