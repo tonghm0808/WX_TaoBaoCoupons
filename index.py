@@ -5,6 +5,7 @@ import pymongo
 import hashlib
 import xml.etree.ElementTree as ET
 import time
+import re
 
 DB_NAME = 'dwADfZdbrNknnSLAmPxt'
 DB_API_KEY = '48085b6296ac48acb99e6ff71e863630'
@@ -45,11 +46,14 @@ def search_db(temp=None):
     db = con[DB_NAME]
     db.authenticate(DB_API_KEY, DB_SECRET_KEY)
     if len(temp_list) > 1:
-        db_result = db['coupons'].find({'title': {'$regex': '(?:.*?%s.*?%s|.*?%s.*?%s)' % (
-            temp_list[0], temp_list[1], temp_list[1], temp_list[0])}}).limit(8).sort('biz30Day', -1)
+        pattern = re.compile('(?:.*?%s.*?%s|.*?%s.*?%s)' % (
+            temp_list[0], temp_list[1], temp_list[1], temp_list[0]))
+        db_result = db['coupons'].find(
+            {'title': {'$regex': pattern}}).hint('title').limit(5).sort('biz30Day', -1)
     else:
+        pattern = re.compile('%s' % temp_list[0])
         db_result = db_result = db['coupons'].find(
-            {'title': {'$regex': '%s' % temp_list[0]}}).limit(8).sort('biz30Day', -1)
+            {'title': {'$regex': pattern}}).hint('title').limit(5).sort('biz30Day', -1)
     result = []
     for x in db_result:
         result.append(x)
