@@ -6,6 +6,10 @@ import hashlib
 import xml.etree.ElementTree as ET
 import time
 
+db_name = 'dwADfZdbrNknnSLAmPxt'
+api_key = '48085b6296ac48acb99e6ff71e863630'
+secret_key = 'dbd3fcb2c6034b4986364603334d6ffe'
+
 app = Bottle()
 
 
@@ -36,10 +40,6 @@ def parse_msg():
 
 
 def search_db(temp=None):
-    db_name = 'dwADfZdbrNknnSLAmPxt'
-    api_key = '48085b6296ac48acb99e6ff71e863630'
-    secret_key = 'dbd3fcb2c6034b4986364603334d6ffe'
-
     con = pymongo.MongoClient('mongo.duapp.com', 8908)
     db = con[db_name]
     db.authenticate(api_key, secret_key)
