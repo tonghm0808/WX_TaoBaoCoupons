@@ -46,31 +46,20 @@ def search_db(temp=None):
     db = con[DB_NAME]
     db.authenticate(DB_API_KEY, DB_SECRET_KEY)
     result = []
-    # if len(temp_list) > 1:
-    #     pattern = re.compile('(?:.*?%s.*?%s|.*?%s.*?%s)' % (
-    #         temp_list[0], temp_list[1], temp_list[1], temp_list[0]))
-    #     db_result = db['coupons'].find(
-    #         {'title': {'$regex': pattern}}).hint('title').limit(5).sort('biz30Day', -1)
-    # else:
-    #     pattern = re.compile('%s' % temp_list[0])
-    #     db_result = db_result = db['coupons'].find(
-    #         {'title': {'$regex': pattern}}).hint('title').limit(5).sort('biz30Day', -1)
+    if len(temp_list) > 1:
+        pattern = re.compile('(?:.*?%s.*?%s|.*?%s.*?%s)' % (
+            temp_list[0], temp_list[1], temp_list[1], temp_list[0]))
+        db_result = db['coupons'].find(
+            {'title': {'$regex': pattern}}).hint('title').limit(5).sort('biz30Day', -1)
+    else:
+        pattern = re.compile('%s' % temp_list[0])
+        db_result = db_result = db['coupons'].find(
+            {'title': {'$regex': pattern}}).hint('title').limit(5).sort('biz30Day', -1)
 
-    pattern = re.compile('(?:.*?%s.*)' % temp_list[0])
-    db_result = db['coupons'].find(
-        {'title': {'$regex': pattern}}).hint('title').sort('biz30Day', -1)
+    for x in db_result:
+        result.append(x)
 
-    for x, val in enumerate(db_result):
-        if len(temp_list) > 1:
-            if val['title'].find(temp_list[1]) != -1:
-                result.append(val)
-            if x > 4:
-                break
-        else:
-            result.append(val)
-            if x > 4:
-                break
-    return result[0:4]
+    return result
 
 
 @app.post("/")
