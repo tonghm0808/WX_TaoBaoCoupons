@@ -117,9 +117,9 @@ def response_msg():
                              str(int(time.time())),
                              msg['MsgType'],
                              '没有搜到结果，请换个关键字搜索！多个关键字之间请用空格分开！\
-                             \n例如：\
-                             \n    苹果 数据线\
-                             \n    家用 吸尘器')
+                             例如：\
+                                 苹果 数据线\
+                                 家用 吸尘器')
     return echostr
 
 
