@@ -11,6 +11,33 @@ DB_NAME = 'dwADfZdbrNknnSLAmPxt'
 DB_API_KEY = '48085b6296ac48acb99e6ff71e863630'
 DB_SECRET_KEY = 'dbd3fcb2c6034b4986364603334d6ffe'
 
+textTpl = '''<xml>
+    <ToUserName><![CDATA[%s]]></ToUserName>
+    <FromUserName><![CDATA[%s]]></FromUserName>
+    <CreateTime>%s</CreateTime>
+    <MsgType><![CDATA[%s]]></MsgType>
+    <Content><![CDATA[%s]]></Content>
+    <FuncFlag>0</FuncFlag>
+    </xml>'''
+
+pictextTpl = '''<xml>
+    <ToUserName><![CDATA[%s]]></ToUserName>
+    <FromUserName><![CDATA[%s]]></FromUserName>
+    <CreateTime>%s</CreateTime>
+    <MsgType><![CDATA[news]]></MsgType>
+    <ArticleCount>%s</ArticleCount>
+    <Articles>
+    %s
+    </Articles>
+    </xml>'''
+
+item = '''<item>
+    <Title><![CDATA[%s%s]]></Title>
+    <Description><![CDATA[%s]]></Description>
+    <PicUrl><![CDATA[%s]]></PicUrl>
+    <Url><![CDATA[%s]]></Url>
+    </item>'''
+
 app = Bottle()
 
 
@@ -47,7 +74,7 @@ def search_db(temp=None):
     db.authenticate(DB_API_KEY, DB_SECRET_KEY)
     result = []
     if len(temp_list) > 1:
-        pattern = re.compile('(?:.*?%s.*?%s|.*?%s.*?%s)' % (
+        pattern = re.compile('.*?%s.*?%s|.*?%s.*?%s' % (
             temp_list[0], temp_list[1], temp_list[1], temp_list[0]))
         db_result = db['coupons'].find(
             {'title': {'$regex': pattern}}).hint('title').limit(5).sort('biz30Day', -1)
@@ -64,37 +91,10 @@ def search_db(temp=None):
 @app.post("/")
 def response_msg():
     msg = parse_msg()
-    textTpl = '''<xml>
-    <ToUserName><![CDATA[%s]]></ToUserName>
-    <FromUserName><![CDATA[%s]]></FromUserName>
-    <CreateTime>%s</CreateTime>
-    <MsgType><![CDATA[%s]]></MsgType>
-    <Content><![CDATA[%s]]></Content>
-    <FuncFlag>0</FuncFlag>
-    </xml>'''
-
-    pictextTpl = '''<xml>
-    <ToUserName><![CDATA[%s]]></ToUserName>
-    <FromUserName><![CDATA[%s]]></FromUserName>
-    <CreateTime>%s</CreateTime>
-    <MsgType><![CDATA[news]]></MsgType>
-    <ArticleCount>%s</ArticleCount>
-    <Articles>
-    %s
-    </Articles>
-    </xml>'''
-
-    item = '''<item>
-    <Title><![CDATA[%s%s]]></Title> 
-    <Description><![CDATA[%s]]></Description>
-    <PicUrl><![CDATA[%s]]></PicUrl>
-    <Url><![CDATA[%s]]></Url>
-    </item>'''
-
     get_infos = search_db(msg['Content'])
+    length = len(get_infos)
     items = ''
     temp = ''
-    length = len(get_infos)
 
     if length:
         for info in get_infos:
