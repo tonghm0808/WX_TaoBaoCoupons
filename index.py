@@ -91,20 +91,20 @@ def response_msg():
     <Url><![CDATA[%s]]></Url>
     </item>'''
 
-    get_info = search_db(msg['Content'])
+    get_infos = search_db(msg['Content'])
     items = ''
     temp = ''
-    length = len(get_info)
+    length = len(get_infos)
 
     if length:
-        for i in range(0, length):
+        for info in get_infos:
             description = u'【原价%s元 领%s元券】' % (
-                get_info[i]['reservePrice'], get_info[i]['couponPrice'])
+                info['reservePrice'], info['couponPrice'])
             temp = item % (description,
-                           get_info[i]['title'],
+                           info['title'],
                            description,
-                           get_info[i]['picUrl'],
-                           get_info[i]['shareUrl'])
+                           info['picUrl'],
+                           info['shareUrl'])
             items = items + temp
 
         echostr = pictextTpl % (msg['FromUserName'],
