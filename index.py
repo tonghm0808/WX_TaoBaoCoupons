@@ -28,12 +28,6 @@ pictextTpl = '''<xml>
     <ArticleCount>%s</ArticleCount>
     <Articles>
     %s
-    <item>
-    <Title><![CDATA[点击查看更多搜索结果>>>]]></Title>
-    <Description><![]></Description>
-    <PicUrl><![]></PicUrl>
-    <Url><![CDATA[http://taoyouquan.duapp.com/search?item=%s]]></Url>
-    </item>
     </Articles>
     </xml>'''
 
@@ -45,23 +39,6 @@ item = '''<item>
     </item>'''
 
 app = Bottle()
-
-
-@app.get('/weixin')
-def checkSignature():
-    token = "tonghuanmingdeweixin"
-    signature = request.GET.get('signature', None)
-    timestamp = request.GET.get('timestamp', None)
-    nonce = request.GET.get('nonce', None)
-    echostr = request.GET.get('echostr', None)
-    tmpList = [token, timestamp, nonce]
-    tmpList.sort()
-    tmpstr = "%s%s%s" % tuple(tmpList)
-    hashstr = hashlib.sha1(tmpstr).hexdigest()
-    if hashstr == signature:
-        return echostr
-    else:
-        return False
 
 
 def parse_msg():
@@ -106,6 +83,23 @@ def search():
             p = '<p>%s  %s</p>' % (i['title'], i['shareUrl'])
             ret = ret + p
         return ret
+
+
+@app.get('/weixin')
+def checkSignature():
+    token = "tonghuanmingdeweixin"
+    signature = request.GET.get('signature', None)
+    timestamp = request.GET.get('timestamp', None)
+    nonce = request.GET.get('nonce', None)
+    echostr = request.GET.get('echostr', None)
+    tmpList = [token, timestamp, nonce]
+    tmpList.sort()
+    tmpstr = "%s%s%s" % tuple(tmpList)
+    hashstr = hashlib.sha1(tmpstr).hexdigest()
+    if hashstr == signature:
+        return echostr
+    else:
+        return False
 
 
 @app.post("/weixin")
