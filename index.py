@@ -29,7 +29,7 @@ pictextTpl = '''<xml>
     <Articles>
     %s
     <item>
-    <Title><![CDATA[%s]]></Title>
+    <Title><![CDATA[]]></Title>
     <Description><![CDATA[]]></Description>
     <PicUrl><![CDATA[]]></PicUrl>
     <Url><![CDATA[]]></Url>
@@ -131,8 +131,7 @@ def response_msg():
                                 msg['ToUserName'],
                                 str(int(time.time())),
                                 str(length + 1),
-                                items,
-                                '点击查看更多搜索结果')
+                                items)
     else:
         echostr = textTpl % (msg['FromUserName'],
                              msg['ToUserName'],
