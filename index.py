@@ -128,7 +128,7 @@ def response_msg():
 
 if __name__ == '__main__':
     debug(True)
-    run(app, host='0.0.0.0', port=8080, reloader=True)
+    run(app, host='127.0.0.1', port=8080, reloader=True)
 
 else:
     from bae.core.wsgi import WSGIApplication
