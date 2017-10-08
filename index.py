@@ -41,11 +41,6 @@ item = '''<item>
 app = Bottle()
 
 
-@app.get('/search')
-def search():
-    return '这是一个搜索页面'
-
-
 @app.get('/weixin')
 def checkSignature():
     token = "tonghuanmingdeweixin"
@@ -91,6 +86,11 @@ def search_db(temp=None):
     for x in db_result:
         result.append(x)
     return result
+
+
+@app.get('/search')
+def search():
+    return search_db('飞机杯')
 
 
 @app.post("/weixin")
