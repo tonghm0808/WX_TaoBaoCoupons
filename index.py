@@ -91,7 +91,10 @@ def search_db(temp=None):
 @app.get('/search/<name>')
 def search(name):
     result = search_db(name)
-    return result[0]
+    if len(result) is 0:
+        return '没有搜索到结果！'
+    else:
+        return result[0]['title']
 
 
 @app.post("/weixin")
