@@ -90,7 +90,7 @@ def search_db(temp=None):
 
 @app.get('/search/<name>')
 def search(name):
-    result = search_db(name)
+    result = search_db(name.decode('utf8'))
     if len(result) is 0:
         return '没有搜索到结果！'
     else:
