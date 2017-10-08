@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-from bottle import Bottle, request, run, debug
+from bottle import Bottle, request, run, debug, route
 import pymongo
 import hashlib
 import xml.etree.ElementTree as ET
@@ -39,6 +39,11 @@ item = '''<item>
     </item>'''
 
 app = Bottle()
+
+
+@app.route('/search')
+def search():
+    return '这是一个搜索页面'
 
 
 @app.get('/')
