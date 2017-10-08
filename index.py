@@ -86,7 +86,7 @@ def search():
         return '没有搜索到结果！'
     else:
         for i in result:
-            p = '<p>%s  %s</p>' % (i['title'], i['shareUrl'])
+            p = '<p><a href="%s">%s</a></p>' % (i['shareUrl'], i['title'])
             ret = ret + p
         return ret
 
