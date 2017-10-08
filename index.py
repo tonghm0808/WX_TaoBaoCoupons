@@ -132,7 +132,7 @@ def response_msg():
                                 str(int(time.time())),
                                 str(length),
                                 items,
-                                msg['Content'].decode('utf-8'))
+                                '小米')
     else:
         echostr = textTpl % (msg['FromUserName'],
                              msg['ToUserName'],
