@@ -88,9 +88,10 @@ def search_db(temp=None):
     return result
 
 
-@app.get('/search/<name>')
+@app.get('/search')
 def search(name):
-    result = search_db(name.decode('utf8'))
+    item = request.query.item
+    result = search_db(item)
     if len(result) is 0:
         return '没有搜索到结果！'
     else:
