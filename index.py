@@ -132,7 +132,7 @@ def response_msg():
                                 str(int(time.time())),
                                 str(length),
                                 items,
-                                msg['Content'].encode('utf-8'))
+                                str(msg['Content']))
     else:
         echostr = textTpl % (msg['FromUserName'],
                              msg['ToUserName'],
