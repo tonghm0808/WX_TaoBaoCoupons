@@ -131,8 +131,7 @@ def response_msg():
                                 msg['ToUserName'],
                                 str(int(time.time())),
                                 str(length),
-                                items,
-                                u'小米')
+                                items)
     else:
         echostr = textTpl % (msg['FromUserName'],
                              msg['ToUserName'],
