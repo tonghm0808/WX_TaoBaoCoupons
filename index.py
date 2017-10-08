@@ -67,7 +67,7 @@ def parse_msg():
     return msg
 
 
-def search_db(temp=None):
+def search_db(temp=None, num=5):
     temp_list = temp.split(' ')
     con = pymongo.MongoClient('mongo.duapp.com', 8908)
     db = con[DB_NAME]
@@ -77,11 +77,11 @@ def search_db(temp=None):
         pattern = re.compile('.*?%s.*?%s|.*?%s.*?%s' % (
             temp_list[0], temp_list[1], temp_list[1], temp_list[0]))
         db_result = db['coupons'].find(
-            {'title': {'$regex': pattern}}).hint('title').limit(5).sort('biz30Day', -1)
+            {'title': {'$regex': pattern}}).hint('title').limit(num).sort('biz30Day', -1)
     else:
         pattern = re.compile('%s' % temp_list[0])
         db_result = db_result = db['coupons'].find(
-            {'title': {'$regex': pattern}}).hint('title').limit(5).sort('biz30Day', -1)
+            {'title': {'$regex': pattern}}).hint('title').limit(num).sort('biz30Day', -1)
 
     for x in db_result:
         result.append(x)
@@ -92,7 +92,7 @@ def search_db(temp=None):
 def search():
     ret = ''
     item = request.query.item
-    result = search_db(item)
+    result = search_db(item, 100)
     if len(result) is 0:
         return '没有搜索到结果！'
     else:
