@@ -46,7 +46,7 @@ def search():
     return '这是一个搜索页面'
 
 
-@app.get('/')
+@app.get('/weixin')
 def checkSignature():
     token = "tonghuanmingdeweixin"
     signature = request.GET.get('signature', None)
@@ -93,7 +93,7 @@ def search_db(temp=None):
     return result
 
 
-@app.post("/")
+@app.post("/weixin")
 def response_msg():
     msg = parse_msg()
     get_infos = search_db(msg['Content'])
