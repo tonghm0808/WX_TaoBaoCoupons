@@ -89,7 +89,7 @@ def search_db(temp=None):
 
 
 @app.get('/search')
-def search(name):
+def search():
     item = request.query.item
     result = search_db(item)
     if len(result) is 0:
