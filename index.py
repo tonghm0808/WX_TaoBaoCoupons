@@ -132,7 +132,7 @@ def response_msg():
                                 str(int(time.time())),
                                 str(length + 1),
                                 items,
-                                '点击查看更多搜索结果>>>')
+                                '点击查看更多搜索结果')
     else:
         echostr = textTpl % (msg['FromUserName'],
                              msg['ToUserName'],
