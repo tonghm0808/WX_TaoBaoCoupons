@@ -29,10 +29,10 @@ pictextTpl = '''<xml>
     <Articles>
     %s
     <item>
-    <Title><![CDATA[点击查询更多结果！]]></Title>
+    <Title><![CDATA[%s]]></Title>
     <Description><![CDATA[]]></Description>
     <PicUrl><![CDATA[]]></PicUrl>
-    <Url><![CDATA[http://www.baidu.com]]></Url>
+    <Url><![CDATA[%s%s]]></Url>
     </item>
     </Articles>
     </xml>'''
@@ -131,7 +131,10 @@ def response_msg():
                                 msg['ToUserName'],
                                 str(int(time.time())),
                                 str(length + 1),
-                                items)
+                                items,
+                                '点击查看更多搜索结果>>>',
+                                'http://taoyouquan.duapp.com/search?item=',
+                                msg['Content'])
     else:
         echostr = textTpl % (msg['FromUserName'],
                              msg['ToUserName'],
