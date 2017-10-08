@@ -28,6 +28,12 @@ pictextTpl = '''<xml>
     <ArticleCount>%s</ArticleCount>
     <Articles>
     %s
+    <item>
+    <Title><![CDATA[点击查询更多结果！]]></Title>
+    <Description><![CDATA[]]></Description>
+    <PicUrl><![CDATA[]]></PicUrl>
+    <Url><![CDATA[http://www.baidu.com]]></Url>
+    </item>
     </Articles>
     </xml>'''
 
@@ -124,7 +130,7 @@ def response_msg():
         echostr = pictextTpl % (msg['FromUserName'],
                                 msg['ToUserName'],
                                 str(int(time.time())),
-                                str(length),
+                                str(length + 1),
                                 items)
     else:
         echostr = textTpl % (msg['FromUserName'],
