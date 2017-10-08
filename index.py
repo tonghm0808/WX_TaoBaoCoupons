@@ -41,7 +41,7 @@ item = '''<item>
 app = Bottle()
 
 
-@app.route('/search')
+@route('/search')
 def search():
     return '这是一个搜索页面'
 
