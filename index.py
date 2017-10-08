@@ -90,12 +90,16 @@ def search_db(temp=None):
 
 @app.get('/search')
 def search():
+    ret = ''
     item = request.query.item
     result = search_db(item)
     if len(result) is 0:
         return '没有搜索到结果！'
     else:
-        return result[0]['title']
+        for i in result:
+            p = '<p>%s  %s</p>' % (i['title'], i['shareUrl'])
+            ret = ret + p
+        return ret
 
 
 @app.post("/weixin")
