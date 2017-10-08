@@ -88,9 +88,10 @@ def search_db(temp=None):
     return result
 
 
-@app.get('/search')
-def search():
-    return search_db('飞机杯')
+@app.get('/search/<name>')
+def search(name):
+    result = search_db(name)
+    return result[0]
 
 
 @app.post("/weixin")
