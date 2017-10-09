@@ -100,13 +100,13 @@ def weixin():
             #                     str(int(time.time())),
             #                     root.find('MsgType').text,
             # u'没有搜到结果，请换个关键字搜索！多个关键字之间请用空格分开！\n例如：\n    苹果 数据线\n    家用 吸尘器')
-        echostr = textTpl % (msg['FromUserName'],
-                             msg['ToUserName'],
-                             str(int(time.time())),
-                             msg['MsgType'],
-                             u'没有搜到结果，请换个关键字搜索！多个关键字之间请用空格分开！\n例如：\n    苹果 数据线\n    家用 吸尘器')
+        # echostr = textTpl % (msg['FromUserName'],
+        #                      msg['ToUserName'],
+        #                      str(int(time.time())),
+        #                      msg['MsgType'],
+        # u'没有搜到结果，请换个关键字搜索！多个关键字之间请用空格分开！\n例如：\n    苹果 数据线\n    家用 吸尘器')
 
-        return echostr
+        return 'echostr'
 
 # def parse_msg():
 #     recvmsg = request.body.read()
@@ -138,7 +138,7 @@ def search_db(temp=None, num=5):
     return result
 
 
-@app.route('/search', methods=['GET'])
+@app.route('/search', methods='GET')
 def search():
     ret = ''
     item = request.query.item
