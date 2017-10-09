@@ -50,7 +50,7 @@ app = Bottle()
 @app.route('/weixin', methods=['GET', 'POST'])
 def weixin():
     if request.method == 'GET':
-        token = "tonghuanmingdeweixin"
+        token = "tonghuanming"
         data = request.url_args
         signature = data.get('signature', None)
         timestamp = data.get('timestamp', None)
