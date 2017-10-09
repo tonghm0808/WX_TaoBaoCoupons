@@ -129,7 +129,7 @@ def search_db(temp=None, num=5):
     return result
 
 
-@app.get('/search')
+@app.route('/search', methods=['GET'])
 def search():
     ret = ''
     item = request.query.item
