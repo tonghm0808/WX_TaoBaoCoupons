@@ -66,36 +66,36 @@ def weixin():
     else:
         recvmsg = request.body.read()
         root = ET.fromstring(recvmsg)
-        get_infos = search_db(root.find('Content').text)
-        length = len(get_infos)
+        # get_infos = search_db(root.find('Content').text)
+        # length = len(get_infos)
 
-        if length:
-            items = ''
-            temp = ''
-            for info in get_infos:
-                description = u'【原价%s元 领%s元券】' % (
-                    info['reservePrice'], info['couponPrice'])
-                temp = item % (description,
-                               info['title'],
-                               description,
-                               info['picUrl'],
-                               info['shareUrl'])
-                items = items + temp
+        # if length:
+        #     items = ''
+        #     temp = ''
+        #     for info in get_infos:
+        #         description = u'【原价%s元 领%s元券】' % (
+        #             info['reservePrice'], info['couponPrice'])
+        #         temp = item % (description,
+        #                        info['title'],
+        #                        description,
+        #                        info['picUrl'],
+        #                        info['shareUrl'])
+        #         items = items + temp
 
-            echostr = pictextTpl % (root.find('FromUserName').text,
-                                    root.find('ToUserName').text,
-                                    str(int(time.time())),
-                                    str(length + 1),
-                                    items,
-                                    u'点击查询更多搜索结果>>>',
-                                    u'http://taoyouquan.duapp.com/search?item=',
-                                    root.find('Content').text)
-        else:
-            echostr = textTpl % (root.find('FromUserName').text,
-                                 root.find('ToUserName').text,
-                                 str(int(time.time())),
-                                 root.find('MsgType').text,
-                                 u'没有搜到结果，请换个关键字搜索！多个关键字之间请用空格分开！\n例如：\n    苹果 数据线\n    家用 吸尘器')
+        #     echostr = pictextTpl % (root.find('FromUserName').text,
+        #                             root.find('ToUserName').text,
+        #                             str(int(time.time())),
+        #                             str(length + 1),
+        #                             items,
+        #                             u'点击查询更多搜索结果>>>',
+        #                             u'http://taoyouquan.duapp.com/search?item=',
+        #                             root.find('Content').text)
+        # else:
+        echostr = textTpl % (root.find('FromUserName').text,
+                             root.find('ToUserName').text,
+                             str(int(time.time())),
+                             root.find('MsgType').text,
+                             u'没有搜到结果，请换个关键字搜索！多个关键字之间请用空格分开！\n例如：\n    苹果 数据线\n    家用 吸尘器')
         return echostr
 
 # def parse_msg():
