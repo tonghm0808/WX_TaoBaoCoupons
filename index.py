@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 
-from bottle import Bottle, request, run, debug
+from bottle import Bottle, request
+from bae.core.wsgi import WSGIApplication
 import pymongo
 import hashlib
 import xml.etree.ElementTree as ET
@@ -144,5 +145,5 @@ def search():
 #     from bae.core.wsgi import WSGIApplication
 #     application = WSGIApplication(app)
 
-from bae.core.wsgi import WSGIApplication
+
 application = WSGIApplication(app)
