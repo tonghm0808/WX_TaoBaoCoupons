@@ -51,11 +51,10 @@ app = Bottle()
 def weixin():
     if request.method == 'GET':
         token = "tonghuanming"
-        data = request.url_args
-        signature = data.get('signature', None)
-        timestamp = data.get('timestamp', None)
-        nonce = data.get('nonce', None)
-        echostr = data.get('echostr', None)
+        signature = request.query.signature
+        timestamp = request.query.timestamp
+        nonce = request.query.nonce
+        echostr = request.query.echostr
         tmpList = [token, timestamp, nonce]
         tmpList.sort()
         tmpstr = "%s%s%s" % tuple(tmpList)
