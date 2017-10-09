@@ -44,16 +44,67 @@ item = '''<item>
     <Url><![CDATA[%s]]></Url>
     </item>'''
 
-app = Bottle()
+app = Bottle(__name__)
 
 
-def parse_msg():
-    recvmsg = request.body.read()
-    root = ET.fromstring(recvmsg)
-    msg = {}
-    for child in root:
-        msg[child.tag] = child.text
-    return msg
+@app.route('/weixin', methods=['GET', 'POST'])
+def weixin():
+    if request.method == 'GET':
+        token = "tonghuanmingdeweixin"
+        data = request.url_args
+        signature = data('signature', None)
+        timestamp = data('timestamp', None)
+        nonce = data('nonce', None)
+        echostr = data('echostr', None)
+        tmpList = [token, timestamp, nonce]
+        tmpList.sort()
+        tmpstr = "%s%s%s" % tuple(tmpList)
+        hashstr = hashlib.sha1(tmpstr).hexdigest()
+        if hashstr == signature:
+            return echostr
+    else:
+        recvmsg = request.body.read()
+        root = ET.fromstring(recvmsg)
+        get_infos = search_db(root.find('Content').text)
+        length = len(get_infos)
+
+        if length:
+            items = ''
+            temp = ''
+            for info in get_infos:
+                description = u'【原价%s元 领%s元券】' % (
+                    info['reservePrice'], info['couponPrice'])
+                temp = item % (description,
+                               info['title'],
+                               description,
+                               info['picUrl'],
+                               info['shareUrl'])
+                items = items + temp
+
+            echostr = pictextTpl % (root.find('FromUserName').text,
+                                    root.find('ToUserName').text,
+                                    str(int(time.time())),
+                                    str(length + 1),
+                                    items,
+                                    u'点击查询更多搜索结果>>>',
+                                    u'http://taoyouquan.duapp.com/search?item=',
+                                    root.find('Content').text)
+        else:
+            echostr = textTpl % (root.find('FromUserName').text,
+                                 root.find('ToUserName').text,
+                                 str(int(time.time())),
+                                 root.find('MsgType').text,
+                                 u'没有搜到结果，请换个关键字搜索！多个关键字之间请用空格分开！\n例如：\n    苹果 数据线\n    家用 吸尘器')
+        return echostr
+    return 'HELLO'
+
+# def parse_msg():
+#     recvmsg = request.body.read()
+#     root = ET.fromstring(recvmsg)
+#     msg = {}
+#     for child in root:
+#         msg[child.tag] = child.text
+#     return msg
 
 
 def search_db(temp=None, num=5):
@@ -91,57 +142,57 @@ def search():
         return ret
 
 
-@app.get('/weixin')
-def checkSignature():
-    token = "tonghuanmingdeweixin"
-    signature = request.GET.get('signature', None)
-    timestamp = request.GET.get('timestamp', None)
-    nonce = request.GET.get('nonce', None)
-    echostr = request.GET.get('echostr', None)
-    tmpList = [token, timestamp, nonce]
-    tmpList.sort()
-    tmpstr = "%s%s%s" % tuple(tmpList)
-    hashstr = hashlib.sha1(tmpstr).hexdigest()
-    if hashstr == signature:
-        return echostr
-    else:
-        return False
+# @app.get('/weixin')
+# def checkSignature():
+#     token = "tonghuanmingdeweixin"
+#     signature = request.GET.get('signature', None)
+#     timestamp = request.GET.get('timestamp', None)
+#     nonce = request.GET.get('nonce', None)
+#     echostr = request.GET.get('echostr', None)
+#     tmpList = [token, timestamp, nonce]
+#     tmpList.sort()
+#     tmpstr = "%s%s%s" % tuple(tmpList)
+#     hashstr = hashlib.sha1(tmpstr).hexdigest()
+#     if hashstr == signature:
+#         return echostr
+#     else:
+#         return False
 
 
-@app.post("/weixin")
-def response_msg():
-    msg = parse_msg()
-    get_infos = search_db(msg['Content'])
-    length = len(get_infos)
-    items = ''
-    temp = ''
+# @app.post("/weixin")
+# def response_msg():
+#     msg = parse_msg()
+#     get_infos = search_db(msg['Content'])
+#     length = len(get_infos)
+#     items = ''
+#     temp = ''
 
-    if length:
-        for info in get_infos:
-            description = u'【原价%s元 领%s元券】' % (
-                info['reservePrice'], info['couponPrice'])
-            temp = item % (description,
-                           info['title'],
-                           description,
-                           info['picUrl'],
-                           info['shareUrl'])
-            items = items + temp
+#     if length:
+#         for info in get_infos:
+#             description = u'【原价%s元 领%s元券】' % (
+#                 info['reservePrice'], info['couponPrice'])
+#             temp = item % (description,
+#                            info['title'],
+#                            description,
+#                            info['picUrl'],
+#                            info['shareUrl'])
+#             items = items + temp
 
-        echostr = pictextTpl % (msg['FromUserName'],
-                                msg['ToUserName'],
-                                str(int(time.time())),
-                                str(length + 1),
-                                items,
-                                u'点击查询更多搜索结果>>>',
-                                u'http://taoyouquan.duapp.com/search?item=',
-                                msg['Content'])
-    else:
-        echostr = textTpl % (msg['FromUserName'],
-                             msg['ToUserName'],
-                             str(int(time.time())),
-                             msg['MsgType'],
-                             u'没有搜到结果，请换个关键字搜索！多个关键字之间请用空格分开！\n例如：\n    苹果 数据线\n    家用 吸尘器')
-    return echostr
+#         echostr = pictextTpl % (msg['FromUserName'],
+#                                 msg['ToUserName'],
+#                                 str(int(time.time())),
+#                                 str(length + 1),
+#                                 items,
+#                                 u'点击查询更多搜索结果>>>',
+#                                 u'http://taoyouquan.duapp.com/search?item=',
+#                                 msg['Content'])
+#     else:
+#         echostr = textTpl % (msg['FromUserName'],
+#                              msg['ToUserName'],
+#                              str(int(time.time())),
+#                              msg['MsgType'],
+#                              u'没有搜到结果，请换个关键字搜索！多个关键字之间请用空格分开！\n例如：\n    苹果 数据线\n    家用 吸尘器')
+#     return echostr
 
 
 if __name__ == '__main__':
