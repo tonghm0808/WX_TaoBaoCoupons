@@ -44,7 +44,7 @@ item = '''<item>
     <Url><![CDATA[%s]]></Url>
     </item>'''
 
-app = Bottle(__name__)
+app = Bottle()
 
 
 @app.route('/weixin', methods=['GET', 'POST'])
