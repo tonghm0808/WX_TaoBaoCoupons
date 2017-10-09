@@ -52,16 +52,18 @@ def weixin():
     if request.method == 'GET':
         token = "tonghuanmingdeweixin"
         data = request.url_args
-        signature = data('signature', None)
-        timestamp = data('timestamp', None)
-        nonce = data('nonce', None)
-        echostr = data('echostr', None)
+        signature = data.get('signature', None)
+        timestamp = data.get('timestamp', None)
+        nonce = data.get('nonce', None)
+        echostr = data.get('echostr', None)
         tmpList = [token, timestamp, nonce]
         tmpList.sort()
         tmpstr = "%s%s%s" % tuple(tmpList)
         hashstr = hashlib.sha1(tmpstr).hexdigest()
         if hashstr == signature:
             return echostr
+        else:
+            return False
     else:
         recvmsg = request.body.read()
         root = ET.fromstring(recvmsg)
@@ -96,7 +98,6 @@ def weixin():
                                  root.find('MsgType').text,
                                  u'没有搜到结果，请换个关键字搜索！多个关键字之间请用空格分开！\n例如：\n    苹果 数据线\n    家用 吸尘器')
         return echostr
-    return 'HELLO'
 
 # def parse_msg():
 #     recvmsg = request.body.read()
