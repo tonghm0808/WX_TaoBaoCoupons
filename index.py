@@ -66,6 +66,10 @@ def weixin():
     else:
         recvmsg = request.body.read()
         root = ET.fromstring(recvmsg)
+        msg = {}
+        for child in root:
+            msg[child.tag] = child.text
+
         # get_infos = search_db(root.find('Content').text)
         # length = len(get_infos)
 
@@ -91,11 +95,17 @@ def weixin():
         #                             u'http://taoyouquan.duapp.com/search?item=',
         #                             root.find('Content').text)
         # else:
-        echostr = textTpl % (root.find('FromUserName').text,
-                             root.find('ToUserName').text,
+            # echostr = textTpl % (root.find('FromUserName').text,
+            #                     root.find('ToUserName').text,
+            #                     str(int(time.time())),
+            #                     root.find('MsgType').text,
+            # u'没有搜到结果，请换个关键字搜索！多个关键字之间请用空格分开！\n例如：\n    苹果 数据线\n    家用 吸尘器')
+        echostr = textTpl % (msg['FromUserName'],
+                             msg['ToUserName'],
                              str(int(time.time())),
-                             root.find('MsgType').text,
+                             msg['MsgType'],
                              u'没有搜到结果，请换个关键字搜索！多个关键字之间请用空格分开！\n例如：\n    苹果 数据线\n    家用 吸尘器')
+
         return echostr
 
 # def parse_msg():
