@@ -64,11 +64,11 @@ def weixin():
         else:
             return False
     else:
-        recvmsg = request.body.read()
-        root = ET.fromstring(recvmsg)
-        msg = {}
-        for child in root:
-            msg[child.tag] = child.text
+        # recvmsg = request.body.read()
+        # root = ET.fromstring(recvmsg)
+        # msg = {}
+        # for child in root:
+        #     msg[child.tag] = child.text
 
         # get_infos = search_db(root.find('Content').text)
         # length = len(get_infos)
