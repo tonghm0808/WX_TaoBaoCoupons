@@ -47,7 +47,7 @@ item = '''<item>
 app = Bottle()
 
 
-@app.route('/weixin', methods=['GET', 'POST'])
+@app.route('/weixin', method=['GET', 'POST'])
 def weixin():
     if request.method == 'GET':
         token = "tonghuanming"
