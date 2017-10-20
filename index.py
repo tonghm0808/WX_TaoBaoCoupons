@@ -1,12 +1,13 @@
 # -*- coding:utf-8 -*-
 
-from bottle import Bottle, request
+from bottle import Bottle, request, view
 from bae.core.wsgi import WSGIApplication
 import pymongo
 import hashlib
 import xml.etree.ElementTree as ET
 import time
 import re
+from netEaseEncode import get_url
 
 DB_NAME = 'dwADfZdbrNknnSLAmPxt'
 DB_API_KEY = '48085b6296ac48acb99e6ff71e863630'
@@ -20,6 +21,7 @@ textTpl = '''<xml>
     <Content><![CDATA[%s]]></Content>
     <FuncFlag>0</FuncFlag>
     </xml>'''
+
 
 pictextTpl = '''<xml>
     <ToUserName><![CDATA[%s]]></ToUserName>
@@ -137,13 +139,24 @@ def search():
         return ret
 
 
-# if __name__ == '__main__':
-#     debug(True)
-#     run(app, host='127.0.0.1', port=8080, reloader=True)
+@app.route('/music', method=['GET', 'POST'])
+@view('ne')
+def decode_music():
+    if request.method == 'GET':
+        music_url = 'Input Music Url'
+    else:
+        m_url = request.POST.get('murl')
+        music_url = get_url(m_url)
+    info = {'murl': music_url}
+    return info
 
-# else:
-#     from bae.core.wsgi import WSGIApplication
-#     application = WSGIApplication(app)
+    # if __name__ == '__main__':
+    #     debug(True)
+    #     run(app, host='127.0.0.1', port=8080, reloader=True)
+
+    # else:
+    #     from bae.core.wsgi import WSGIApplication
+    #     application = WSGIApplication(app)
 
 
 application = WSGIApplication(app)
