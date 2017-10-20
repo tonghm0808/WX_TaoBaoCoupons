@@ -147,7 +147,7 @@ def decode_music():
     else:
         m_url = request.POST.get('murl')
         music_url = get_url(m_url)
-    info = {'murl': music_url}
+    info = {'text': music_url}
     return info
 
     # if __name__ == '__main__':
