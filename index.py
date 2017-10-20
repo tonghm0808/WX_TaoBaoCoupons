@@ -143,11 +143,11 @@ def search():
 @view('ne')
 def decode_music():
     if request.method == 'GET':
-        music_url = 'Input Music Url'
+        text = 'Input Music Url'
     else:
-        m_url = request.POST.get('murl')
-        music_url = get_url(m_url)
-    info = {'text': music_url}
+        m_url = request.POST.get('music_url')
+        text = get_url(m_url)
+    info = {'text': text}
     return info
 
     # if __name__ == '__main__':
