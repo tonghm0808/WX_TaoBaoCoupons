@@ -7,7 +7,6 @@ import hashlib
 import xml.etree.ElementTree as ET
 import time
 import re
-from netEaseEncode import get_url
 
 DB_NAME = 'dwADfZdbrNknnSLAmPxt'
 DB_API_KEY = '48085b6296ac48acb99e6ff71e863630'
@@ -137,18 +136,6 @@ def search():
             p = '<p><a href="%s">%s</a></p>' % (i['shareUrl'], i['title'])
             ret = ret + p
         return ret
-
-
-@app.route('/music', method=['GET', 'POST'])
-@view('ne')
-def decode_music():
-    if request.method == 'GET':
-        text = 'Input Music Url'
-    else:
-        m_url = request.POST.get('music_url')
-        text = get_url(m_url)
-    info = {'text': text}
-    return info
 
     # if __name__ == '__main__':
     #     debug(True)
